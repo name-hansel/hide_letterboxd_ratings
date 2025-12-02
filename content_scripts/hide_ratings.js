@@ -5,31 +5,27 @@
 
   window.hasRun = true;
 
-  function hideRatings() {
-    console.log("HIDE RATINGS");
+  function updateRatingsVisibility(showRatings) {
+    document.querySelectorAll(".ratings-histogram-chart").forEach((element) => {
+      element.style.display = showRatings ? "" : "none";
+    });
   }
 
-  function showRatings() {
-    console.log("SHOW RATINGS");
-  }
-
-  function showReviews() {
-    console.log("SHOW REVIEWS");
-  }
-
-  function hideReviews() {
-    console.log("HIDE REVIEWS");
+  function updateReviewsVisibility(showReviews) {
+    document.querySelectorAll(".film-reviews").forEach((element) => {
+      element.style.display = showReviews ? "" : "none";
+    });
   }
 
   browser.runtime.onMessage.addListener((message) => {
     if (message.command === "HIDE_RATINGS") {
-      hideRatings();
+      updateRatingsVisibility(false);
     } else if (message.command === "SHOW_RATINGS") {
-      showRatings();
+      updateRatingsVisibility(true);
     } else if (message.command === "HIDE_REVIEWS") {
-      hideReviews();
+      updateReviewsVisibility(false);
     } else if (message.command === "SHOW_REVIEWS") {
-      showReviews();
+      updateReviewsVisibility(true);
     }
   });
 })();
