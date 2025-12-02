@@ -8,9 +8,11 @@ function listenForSettingChange() {
         browser.tabs
           .query({ active: true, currentWindow: true })
           .then((tabs) => {
-            updateRatingVisibility(tabs, event.target.value === "yes");
+            updateVisibility(tabs, "RATING", event.target.value === "yes");
           })
           .catch(reportScriptError);
+
+        // setValueInStorage("RATING", event.target.value);
       }
     });
   });
@@ -21,32 +23,22 @@ function listenForSettingChange() {
         browser.tabs
           .query({ active: true, currentWindow: true })
           .then((tabs) => {
-            updateReviewVisibility(tabs, event.target.value === "yes");
+            updateVisibility(tabs, "REVIEW", event.target.value === "yes");
           })
           .catch(reportScriptError);
+
+        // setValueInStorage("REVIEW", event.target.value);
       }
     });
   });
 
-  function updateRatingVisibility(tabs, showRating) {
+  function updateVisibility(tabs, type, show) {
     browser.tabs
       .query({ active: true, currentWindow: true })
       .then(() => {
         browser.tabs.sendMessage(tabs[0].id, {
-          type: "RATING",
-          show: showRating,
-        });
-      })
-      .catch(reportScriptError);
-  }
-
-  function updateReviewVisibility(tabs, showReview) {
-    browser.tabs
-      .query({ active: true, currentWindow: true })
-      .then(() => {
-        browser.tabs.sendMessage(tabs[0].id, {
-          type: "REVIEW",
-          show: showReview,
+          type,
+          show,
         });
       })
       .catch(reportScriptError);
@@ -56,6 +48,17 @@ function listenForSettingChange() {
 function reportScriptError(error) {
   console.error(error.message);
 }
+
+// document.addEventListener("DOMContentLoaded", async () => {
+//   const rating = await browser.storage.managed.get("RATING");
+//   const review = await browser.storage.managed.get("REVIEW");
+// });
+
+// async function setValueInStorage(type, value) {
+//   await browser.storage.sync.set({
+//     [type]: value,
+//   });
+// }
 
 browser.tabs
   .executeScript({

@@ -1,6 +1,6 @@
 {
     "manifest_version": 2,
-    "name": "Hide Letterboxd Ratings",
+    "name": "Hide Letterboxd Ratings & Reviews",
     "version": "1.0",
     "description": "Hide ratings and reviews on Letterboxd.",
     "homepage_url": "https://github.com/name-hansel/hide_letterboxd_ratings",
@@ -8,11 +8,12 @@
         "48": "icons/placeholder.png"
     },
     "permissions": [
-        "activeTab"
+        "activeTab",
+        "storage"
     ],
     "browser_action": {
         "default_icon": "icons/placeholder.png",
-        "default_title": "Hide Letterboxd Ratings",
+        "default_title": "Hide Letterboxd Ratings & Reviews",
         "default_popup": "popup/popup.html"
     }
 }
