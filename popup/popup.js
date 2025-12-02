@@ -33,7 +33,8 @@ function listenForSettingChange() {
       .query({ active: true, currentWindow: true })
       .then(() => {
         browser.tabs.sendMessage(tabs[0].id, {
-          command: showRating ? "SHOW_RATINGS" : "HIDE_RATINGS",
+          type: "RATING",
+          show: showRating,
         });
       })
       .catch(reportScriptError);
@@ -44,7 +45,8 @@ function listenForSettingChange() {
       .query({ active: true, currentWindow: true })
       .then(() => {
         browser.tabs.sendMessage(tabs[0].id, {
-          command: showReview ? "SHOW_REVIEWS" : "HIDE_REVIEWS",
+          type: "REVIEW",
+          show: showReview,
         });
       })
       .catch(reportScriptError);
