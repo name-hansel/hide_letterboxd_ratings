@@ -76,7 +76,7 @@ browser.tabs
     file: "/content_scripts/hide_ratings.js",
   })
   .then(() => {
-    updatePopupFromStorage();
     setupPopup();
+    updatePopupFromStorage();
   })
   .catch(reportScriptError);
