@@ -1,68 +1,82 @@
-function listenForSettingChange() {
+const RATING = "RATING";
+const REVIEW = "REVIEW";
+const SETTING = "SETTING";
+const YES = "yes";
+const CHANGE = "change";
+
+function setupPopup() {
   const ratingRadios = document.querySelectorAll('input[name="ratings"]');
   const reviewRadios = document.querySelectorAll('input[name="reviews"]');
 
   ratingRadios.forEach((radio) => {
-    radio.addEventListener("change", (event) => {
+    radio.addEventListener(CHANGE, (event) => {
       if (event.target.checked) {
         browser.tabs
           .query({ active: true, currentWindow: true })
           .then((tabs) => {
-            updateVisibility(tabs, "RATING", event.target.value === "yes");
+            updateVisibility(tabs, RATING, event.target.value === YES);
+            browser.storage.local.set({
+              RATING: event.target.value === YES,
+            });
           })
           .catch(reportScriptError);
-
-        // setValueInStorage("RATING", event.target.value);
       }
     });
   });
 
   reviewRadios.forEach((radio) => {
-    radio.addEventListener("change", (event) => {
+    radio.addEventListener(CHANGE, (event) => {
       if (event.target.checked) {
         browser.tabs
           .query({ active: true, currentWindow: true })
           .then((tabs) => {
-            updateVisibility(tabs, "REVIEW", event.target.value === "yes");
+            updateVisibility(tabs, REVIEW, event.target.value === YES);
+            browser.storage.local.set({
+              REVIEW: event.target.value === YES,
+            });
           })
           .catch(reportScriptError);
-
-        // setValueInStorage("REVIEW", event.target.value);
       }
     });
   });
-
-  function updateVisibility(tabs, type, show) {
-    browser.tabs
-      .query({ active: true, currentWindow: true })
-      .then(() => {
-        browser.tabs.sendMessage(tabs[0].id, {
-          type,
-          show,
-        });
-      })
-      .catch(reportScriptError);
-  }
 }
 
 function reportScriptError(error) {
   console.error(error.message);
 }
 
-// document.addEventListener("DOMContentLoaded", async () => {
-//   const rating = await browser.storage.managed.get("RATING");
-//   const review = await browser.storage.managed.get("REVIEW");
-// });
+function updatePopupFromStorage() {
+  browser.storage.local.get(RATING).then(({ RATING }) => {
+    document.getElementById(
+      RATING ? "ratings_yes" : "ratings_no"
+    ).checked = true;
+  });
 
-// async function setValueInStorage(type, value) {
-//   await browser.storage.sync.set({
-//     [type]: value,
-//   });
-// }
+  browser.storage.local.get(REVIEW).then(({ REVIEW }) => {
+    document.getElementById(
+      REVIEW ? "reviews_yes" : "reviews_no"
+    ).checked = true;
+  });
+}
+
+function updateVisibility(tabs, type, show) {
+  browser.tabs
+    .query({ active: true, currentWindow: true })
+    .then(() => {
+      browser.tabs.sendMessage(tabs[0].id, {
+        type,
+        show,
+      });
+    })
+    .catch(reportScriptError);
+}
 
 browser.tabs
   .executeScript({
     file: "/content_scripts/hide_ratings.js",
   })
-  .then(listenForSettingChange)
+  .then(() => {
+    updatePopupFromStorage();
+    setupPopup();
+  })
   .catch(reportScriptError);
