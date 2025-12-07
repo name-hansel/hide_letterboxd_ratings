@@ -1,43 +1,29 @@
 const RATING = "RATING";
 const REVIEW = "REVIEW";
-const SETTING = "SETTING";
-const YES = "yes";
 const CHANGE = "change";
 
 function setupPopup() {
-    const ratingRadios = document.querySelectorAll('input[name="ratings"]');
-    const reviewRadios = document.querySelectorAll('input[name="reviews"]');
+    const ratingCheckbox = document.getElementById("ratings");
+    const reviewCheckbox = document.getElementById("reviews");
 
-    ratingRadios.forEach((radio) => {
-        radio.addEventListener(CHANGE, (event) => {
-            if (event.target.checked) {
-                browser.tabs
-                    .query({active: true, currentWindow: true})
-                    .then((tabs) => {
-                        updateVisibility(tabs, RATING, event.target.value === YES);
-                        browser.storage.local.set({
-                            RATING: event.target.value === YES,
-                        });
-                    })
-                    .catch(reportScriptError);
-            }
-        });
+    ratingCheckbox.addEventListener(CHANGE, (event) => {
+        browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
+            const checked = event.target.checked;
+            updateVisibility(tabs, RATING, checked);
+            browser.storage.local.set({
+                RATING: checked
+            })
+        }).catch(reportScriptError);
     });
 
-    reviewRadios.forEach((radio) => {
-        radio.addEventListener(CHANGE, (event) => {
-            if (event.target.checked) {
-                browser.tabs
-                    .query({active: true, currentWindow: true})
-                    .then((tabs) => {
-                        updateVisibility(tabs, REVIEW, event.target.value === YES);
-                        browser.storage.local.set({
-                            REVIEW: event.target.value === YES,
-                        });
-                    })
-                    .catch(reportScriptError);
-            }
-        });
+    reviewCheckbox.addEventListener(CHANGE, (event) => {
+        browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
+            const checked = event.target.checked;
+            updateVisibility(tabs, REVIEW, checked);
+            browser.storage.local.set({
+                REVIEW: checked
+            })
+        }).catch(reportScriptError);
     });
 }
 
@@ -46,16 +32,12 @@ function reportScriptError(error) {
 }
 
 function updatePopupFromStorage() {
-    browser.storage.local.get(RATING).then(({RATING}) => {
-        document.getElementById(
-            RATING ? "ratings_yes" : "ratings_no"
-        ).checked = true;
+    browser.storage.local.get(RATING).then((setting) => {
+        document.getElementById("ratings").checked = setting.RATING;
     });
 
-    browser.storage.local.get(REVIEW).then(({REVIEW}) => {
-        document.getElementById(
-            REVIEW ? "reviews_yes" : "reviews_no"
-        ).checked = true;
+    browser.storage.local.get(REVIEW).then((setting) => {
+        document.getElementById("reviews").checked = setting.REVIEW;
     });
 }
 
@@ -64,8 +46,7 @@ function updateVisibility(tabs, type, show) {
         .query({active: true, currentWindow: true})
         .then(() => {
             browser.tabs.sendMessage(tabs[0].id, {
-                type,
-                show,
+                type, show,
             });
         })
         .catch(reportScriptError);
@@ -73,9 +54,7 @@ function updateVisibility(tabs, type, show) {
 
 function updatePopupEditability() {
     const pattern = "*://letterboxd.com/film/*";
-    const regexPattern = new RegExp(
-        `^${pattern.replace(/\./g, "\\.").replace(/\*/g, ".*")}$`
-    );
+    const regexPattern = new RegExp(`^${pattern.replace(/\./g, "\\.").replace(/\*/g, ".*")}$`);
 
     browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
         for (const element of document.getElementsByTagName("input")) {

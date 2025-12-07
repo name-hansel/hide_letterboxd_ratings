@@ -1,6 +1,6 @@
 html,
 body {
-    width: 300px;
+    width: 200px;
     margin: 0;
     padding: 0;
     font-family: helvetica, serif;
@@ -8,7 +8,7 @@ body {
 }
 
 body {
-    padding: 16px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -17,17 +17,12 @@ body {
 h1 {
     margin: 0;
     text-align: center;
-    font-size: 24px;
+    font-size: 16px;
     color: #d8e0e8;
     font-weight: bolder;
 }
 
-h2 {
-    font-size: 16px;
-    font-weight: normal;
-}
-
-input[type='radio'] {
+input {
     accent-color: #00c030;
 }
 
@@ -44,22 +39,5 @@ input[type='radio'] {
 .setting-section {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     gap: 20px;
-}
-
-.setting-section h2 {
-    margin: 0;
-    flex-shrink: 0;
-}
-
-.radio-group {
-    display: flex;
-    flex-direction: row;
-}
-
-.radio-group label {
-    display: flex;
-    align-items: center;
-    margin: 0 20px 0 0;
 }

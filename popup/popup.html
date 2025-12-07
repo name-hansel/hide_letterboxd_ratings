@@ -1,37 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="popup.css" />
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="popup.css"/>
+    <title>hide letterboxd ratings and reviews</title>
 </head>
 
 <body>
-    <h1>hide letterboxd ratings and reviews</h1>
+<h1>hide letterboxd ratings and reviews</h1>
 
-    <div class="settings-container">
-        <div class="setting-section">
-            <h2>hide ratings?</h2>
-            <div class="radio-group">
-                <input type="radio" id="ratings_yes" name="ratings" value="yes" checked>
-                <label for="ratings_yes">yes</label>
-                <input type="radio" id="ratings_no" name="ratings" value="no">
-                <label for="ratings_no">no</label>
-            </div>
-        </div>
-
-        <div class="setting-section">
-            <h2>hide reviews?</h2>
-            <div class="radio-group">
-                <input type="radio" id="reviews_yes" name="reviews" value="yes" checked>
-                <label for="reviews_yes">yes</label>
-                <input type="radio" id="reviews_no" name="reviews" value="no">
-                <label for="reviews_no">no</label>
-            </div>
-        </div>
+<div class="settings-container">
+    <div class="setting-section">
+        <input type="checkbox" id="ratings" name="ratings" value="yes">
+        <label for="ratings">hide ratings</label>
     </div>
 
-    <script src="popup.js"></script>
+    <div class="setting-section">
+        <input type="checkbox" id="reviews" name="reviews" value="yes">
+        <label for="reviews">hide reviews</label>
+    </div>
+</div>
+
+<script src="popup.js"></script>
 </body>
 
 </html>
