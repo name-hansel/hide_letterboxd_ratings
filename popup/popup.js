@@ -5,89 +5,92 @@ const YES = "yes";
 const CHANGE = "change";
 
 function setupPopup() {
-  const pattern = "*://letterboxd.com/film/*";
-  const regexPattern = new RegExp(
-    `^${pattern.replace(/\./g, "\\.").replace(/\*/g, ".*")}$`
-  );
+    const ratingRadios = document.querySelectorAll('input[name="ratings"]');
+    const reviewRadios = document.querySelectorAll('input[name="reviews"]');
 
-  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
-    for (const element of document.getElementsByTagName("input")) {
-      element.disabled = !regexPattern.test(tabs[0].url);
-    }
-  });
-
-  const ratingRadios = document.querySelectorAll('input[name="ratings"]');
-  const reviewRadios = document.querySelectorAll('input[name="reviews"]');
-
-  ratingRadios.forEach((radio) => {
-    radio.addEventListener(CHANGE, (event) => {
-      if (event.target.checked) {
-        browser.tabs
-          .query({ active: true, currentWindow: true })
-          .then((tabs) => {
-            updateVisibility(tabs, RATING, event.target.value === YES);
-            browser.storage.local.set({
-              RATING: event.target.value === YES,
-            });
-          })
-          .catch(reportScriptError);
-      }
+    ratingRadios.forEach((radio) => {
+        radio.addEventListener(CHANGE, (event) => {
+            if (event.target.checked) {
+                browser.tabs
+                    .query({active: true, currentWindow: true})
+                    .then((tabs) => {
+                        updateVisibility(tabs, RATING, event.target.value === YES);
+                        browser.storage.local.set({
+                            RATING: event.target.value === YES,
+                        });
+                    })
+                    .catch(reportScriptError);
+            }
+        });
     });
-  });
 
-  reviewRadios.forEach((radio) => {
-    radio.addEventListener(CHANGE, (event) => {
-      if (event.target.checked) {
-        browser.tabs
-          .query({ active: true, currentWindow: true })
-          .then((tabs) => {
-            updateVisibility(tabs, REVIEW, event.target.value === YES);
-            browser.storage.local.set({
-              REVIEW: event.target.value === YES,
-            });
-          })
-          .catch(reportScriptError);
-      }
+    reviewRadios.forEach((radio) => {
+        radio.addEventListener(CHANGE, (event) => {
+            if (event.target.checked) {
+                browser.tabs
+                    .query({active: true, currentWindow: true})
+                    .then((tabs) => {
+                        updateVisibility(tabs, REVIEW, event.target.value === YES);
+                        browser.storage.local.set({
+                            REVIEW: event.target.value === YES,
+                        });
+                    })
+                    .catch(reportScriptError);
+            }
+        });
     });
-  });
 }
 
 function reportScriptError(error) {
-  console.error(error.message);
+    console.error(error.message);
 }
 
 function updatePopupFromStorage() {
-  browser.storage.local.get(RATING).then(({ RATING }) => {
-    document.getElementById(
-      RATING ? "ratings_yes" : "ratings_no"
-    ).checked = true;
-  });
+    browser.storage.local.get(RATING).then(({RATING}) => {
+        document.getElementById(
+            RATING ? "ratings_yes" : "ratings_no"
+        ).checked = true;
+    });
 
-  browser.storage.local.get(REVIEW).then(({ REVIEW }) => {
-    document.getElementById(
-      REVIEW ? "reviews_yes" : "reviews_no"
-    ).checked = true;
-  });
+    browser.storage.local.get(REVIEW).then(({REVIEW}) => {
+        document.getElementById(
+            REVIEW ? "reviews_yes" : "reviews_no"
+        ).checked = true;
+    });
 }
 
 function updateVisibility(tabs, type, show) {
-  browser.tabs
-    .query({ active: true, currentWindow: true })
-    .then(() => {
-      browser.tabs.sendMessage(tabs[0].id, {
-        type,
-        show,
-      });
-    })
-    .catch(reportScriptError);
+    browser.tabs
+        .query({active: true, currentWindow: true})
+        .then(() => {
+            browser.tabs.sendMessage(tabs[0].id, {
+                type,
+                show,
+            });
+        })
+        .catch(reportScriptError);
 }
 
+function updatePopupEditability() {
+    const pattern = "*://letterboxd.com/film/*";
+    const regexPattern = new RegExp(
+        `^${pattern.replace(/\./g, "\\.").replace(/\*/g, ".*")}$`
+    );
+
+    browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
+        for (const element of document.getElementsByTagName("input")) {
+            element.disabled = !regexPattern.test(tabs[0].url);
+        }
+    });
+}
+
+updatePopupEditability();
 browser.tabs
-  .executeScript({
-    file: "/content_scripts/hide_ratings.js",
-  })
-  .then(() => {
-    updatePopupFromStorage();
-    setupPopup();
-  })
-  .catch(reportScriptError);
+    .executeScript({
+        file: "/content_scripts/hide_ratings.js",
+    })
+    .then(() => {
+        updatePopupFromStorage();
+        setupPopup();
+    })
+    .catch(reportScriptError);
