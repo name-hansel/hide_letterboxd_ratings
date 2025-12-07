@@ -1,3 +1,13 @@
+const RATING = {
+  name: "RATING",
+  className: "ratings-histogram-chart",
+};
+
+const REVIEW = {
+  name: "REVIEW",
+  className: "film-recent-reviews",
+};
+
 (function () {
   if (window.hasRun) {
     return;
@@ -7,9 +17,7 @@
 
   browser.runtime.onMessage.addListener((message) => {
     updateElementVisibility(
-      message.type === "RATING"
-        ? "ratings-histogram-chart"
-        : "film-recent-reviews",
+      message.type === RATING.name ? RATING.className : REVIEW.className,
       message.show
     );
   });
@@ -40,15 +48,15 @@ function waitForElement(className) {
 }
 
 Promise.all([
-  waitForElement("ratings-histogram-chart").then(() => {
-    browser.storage.local.get("RATING").then(({ RATING }) => {
-      updateElementVisibility("ratings-histogram-chart", RATING);
+  waitForElement(RATING.className).then(() => {
+    browser.storage.local.get(RATING.name).then(({ RATING }) => {
+      updateElementVisibility(RATING.className, RATING);
     });
   }),
 
-  waitForElement("film-recent-reviews").then(() => {
-    browser.storage.local.get("REVIEW").then(({ REVIEW }) => {
-      updateElementVisibility("film-recent-reviews", REVIEW);
+  waitForElement(REVIEW.className).then(() => {
+    browser.storage.local.get(REVIEW.name).then(({ REVIEW }) => {
+      updateElementVisibility(REVIEW.className, REVIEW);
     });
   }),
 ]);
