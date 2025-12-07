@@ -5,6 +5,17 @@ const YES = "yes";
 const CHANGE = "change";
 
 function setupPopup() {
+  const pattern = "*://letterboxd.com/film/*";
+  const regexPattern = new RegExp(
+    `^${pattern.replace(/\./g, "\\.").replace(/\*/g, ".*")}$`
+  );
+
+  browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
+    for (const element of document.getElementsByTagName("input")) {
+      element.disabled = !regexPattern.test(tabs[0].url);
+    }
+  });
+
   const ratingRadios = document.querySelectorAll('input[name="ratings"]');
   const reviewRadios = document.querySelectorAll('input[name="reviews"]');
 
