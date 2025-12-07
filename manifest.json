@@ -5,9 +5,9 @@
             "id": "@hide-letterboxd-ratings-reviews"
         }
     },
-    "name": "Hide Letterboxd Ratings & Reviews",
+    "name": "hide letterboxd ratings and reviews",
     "version": "1.0",
-    "description": "Hide ratings and reviews on Letterboxd.",
+    "description": "hide ratings and reviews on letterboxd",
     "homepage_url": "https://github.com/name-hansel/hide_letterboxd_ratings",
     "icons": {
         "48": "icons/placeholder.png"
@@ -18,7 +18,7 @@
                 "*://letterboxd.com/film/*"
             ],
             "js": [
-                "content_scripts/hide_ratings.js"
+                "content_scripts/page_load.js"
             ]
         }
     ],
@@ -28,7 +28,7 @@
     ],
     "browser_action": {
         "default_icon": "icons/placeholder.png",
-        "default_title": "Hide Letterboxd Ratings & Reviews",
+        "default_title": "hide letterboxd ratings and reviews",
         "default_popup": "popup/popup.html"
     }
 }
