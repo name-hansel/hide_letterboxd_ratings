@@ -18,7 +18,7 @@ h1 {
     margin: 0;
     text-align: center;
     font-size: 24px;
-    color: #f2f3f5;
+    color: #d8e0e8;
     font-weight: bolder;
 }
 
@@ -38,7 +38,7 @@ input[type='radio'] {
 }
 
 .settings-container > * {
-    color: #f2f3f5;
+    color: #d8e0e8;
 }
 
 .setting-section {
