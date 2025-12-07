@@ -7,7 +7,9 @@
 
   browser.runtime.onMessage.addListener((message) => {
     updateElementVisibility(
-      message.type === "RATING" ? "ratings-histogram-chart" : "film-reviews",
+      message.type === "RATING"
+        ? "ratings-histogram-chart"
+        : "film-recent-reviews",
       message.show
     );
   });
@@ -43,6 +45,7 @@ Promise.all([
       updateElementVisibility("ratings-histogram-chart", RATING);
     });
   }),
+
   waitForElement("film-recent-reviews").then(() => {
     browser.storage.local.get("REVIEW").then(({ REVIEW }) => {
       updateElementVisibility("film-recent-reviews", REVIEW);
