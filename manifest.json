@@ -1,34 +1,49 @@
 {
-    "manifest_version": 2,
-    "browser_specific_settings": {
-        "gecko": {
-            "id": "@hide-letterboxd-ratings-reviews"
-        }
-    },
-    "name": "hide letterboxd ratings and reviews",
-    "version": "1.0",
-    "description": "hide ratings and reviews on letterboxd",
-    "homepage_url": "https://github.com/name-hansel/hide_letterboxd_ratings",
-    "icons": {
-        "48": "icons/placeholder.png"
-    },
-    "content_scripts": [
-        {
-            "matches": [
-                "*://letterboxd.com/film/*"
-            ],
-            "js": [
-                "content_scripts/page_load.js"
-            ]
-        }
-    ],
-    "permissions": [
-        "activeTab",
-        "storage"
-    ],
-    "browser_action": {
-        "default_icon": "icons/placeholder.png",
-        "default_title": "hide letterboxd ratings and reviews",
-        "default_popup": "popup/popup.html"
+  "manifest_version": 2,
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "@hide-letterboxd-ratings-reviews"
     }
+  },
+  "name": "hide letterboxd ratings and reviews",
+  "version": "1.0",
+  "description": "hide ratings and reviews on letterboxd",
+  "homepage_url": "https://github.com/name-hansel/hide_letterboxd_ratings",
+  "icons": {
+    "48": "icons/placeholder.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content_scripts/constants.js",
+        "content_scripts/hide_ratings.js"
+      ]
+    },
+    {
+      "matches": [
+        "*://letterboxd.com/film/*"
+      ],
+      "js": [
+        "content_scripts/page_load.js"
+      ]
+    }
+  ],
+  "background": {
+    "scripts": [
+      "background_scripts/tab_change.js"
+    ]
+  },
+  "permissions": [
+    "activeTab",
+    "storage",
+    "tabs"
+  ],
+  "browser_action": {
+    "default_icon": "icons/placeholder.png",
+    "default_title": "hide letterboxd ratings and reviews",
+    "default_popup": "popup/popup.html"
+  }
 }

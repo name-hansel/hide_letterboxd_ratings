@@ -1,16 +1,18 @@
-(function () {
-  if (window.hasRun) {
-    return;
-  }
+function updateElementVisibility(elementClassName, show) {
+    document.querySelectorAll(`.${elementClassName}`).forEach((element) => {
+        element.style.display = show ? "none" : "";
+    });
+}
 
-  window.hasRun = true;
 
-  browser.runtime.onMessage.addListener((message) => {
-    updateElementVisibility(
-      message.type === SETTING_RATING.name
-        ? SETTING_RATING.className
-        : SETTING_REVIEW.className,
-      message.show
-    );
-  });
-})();
+function updatePageVisibility(request, sender, sendResponse) {
+    if (request.type === SETTING_RATING.name) {
+        updateElementVisibility(SETTING_RATING.className, request.show);
+    }
+
+    if (request.type === SETTING_REVIEW.name) {
+        updateElementVisibility(SETTING_REVIEW.className, request.show);
+    }
+}
+
+browser.runtime.onMessage.addListener(updatePageVisibility);

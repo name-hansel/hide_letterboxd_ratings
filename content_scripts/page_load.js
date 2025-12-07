@@ -1,11 +1,3 @@
-const SETTING_RATING = {
-    name: "RATING", className: "ratings-histogram-chart",
-};
-
-const SETTING_REVIEW = {
-    name: "REVIEW", className: "film-recent-reviews",
-};
-
 function waitForElement(className) {
     return new Promise((resolve) => {
         if (document.querySelector(`.${className}`)) {
@@ -21,12 +13,6 @@ function waitForElement(className) {
         });
 
         observer.observe(document.body, {childList: true, subtree: true});
-    });
-}
-
-function updateElementVisibility(elementClassName, show) {
-    document.querySelectorAll(`.${elementClassName}`).forEach((element) => {
-        element.style.display = show ? "none" : "";
     });
 }
 
