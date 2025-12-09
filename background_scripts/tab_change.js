@@ -1,6 +1,4 @@
 function visibilityUpdate() {
-    // TODO Make setting one object
-    // TODO refactor this mess
 
     const pattern = "*://letterboxd.com/film/*";
     const regexPattern = new RegExp(`^${pattern.replace(/\./g, "\\.").replace(/\*/g, ".*")}$`);
