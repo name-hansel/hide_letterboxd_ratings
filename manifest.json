@@ -10,7 +10,7 @@
   "description": "hide ratings and reviews on letterboxd",
   "homepage_url": "https://github.com/name-hansel/hide_letterboxd_ratings",
   "icons": {
-    "48": "icons/placeholder.png"
+    "48": "icons/icon.svg"
   },
   "content_scripts": [
     {
@@ -42,7 +42,7 @@
     "tabs"
   ],
   "browser_action": {
-    "default_icon": "icons/placeholder.png",
+    "default_icon": "icons/icon.svg",
     "default_title": "hide letterboxd ratings and reviews",
     "default_popup": "popup/popup.html"
   }
