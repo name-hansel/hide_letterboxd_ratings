@@ -5,3 +5,7 @@ const SETTING_RATING = {
 const SETTING_REVIEW = {
     name: "REVIEW", className: "film-recent-reviews",
 };
+
+const SHOW_LOGGED = {
+    name: "SHOW_LOGGED"
+}

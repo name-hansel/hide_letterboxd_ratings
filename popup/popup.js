@@ -1,10 +1,12 @@
 const RATING = "RATING";
 const REVIEW = "REVIEW";
+const SHOW_LOGGED = "SHOW_LOGGED";
 const CHANGE = "change";
 
 function setupPopup() {
     const ratingCheckbox = document.getElementById("ratings");
     const reviewCheckbox = document.getElementById("reviews");
+    const showLoggedCheckbox = document.getElementById("show-logged");
 
     ratingCheckbox.addEventListener(CHANGE, (event) => {
         browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
@@ -25,6 +27,29 @@ function setupPopup() {
             })
         }).catch(reportScriptError);
     });
+
+    showLoggedCheckbox.addEventListener(CHANGE, (event) => {
+        // Clear rating and review checkboxes
+        let ratingsCheckbox = document.getElementById("ratings");
+        ratingsCheckbox.checked = false;
+        browser.storage.local.set({
+            RATING: false
+        })
+
+        let reviewsCheckbox = document.getElementById("reviews");
+        reviewsCheckbox.checked = false;
+        browser.storage.local.set({
+            REVIEW: false
+        })
+
+        // Disable / enable rating and review checkboxes
+        ratingsCheckbox.disabled = event.target.checked;
+        reviewsCheckbox.disabled = event.target.checked;
+
+        browser.storage.local.set({
+            SHOW_LOGGED: event.target.checked
+        })
+    })
 }
 
 function reportScriptError(error) {
@@ -32,12 +57,17 @@ function reportScriptError(error) {
 }
 
 function updatePopupFromStorage() {
-    browser.storage.local.get(RATING).then((setting) => {
-        document.getElementById("ratings").checked = setting.RATING;
-    });
-
-    browser.storage.local.get(REVIEW).then((setting) => {
-        document.getElementById("reviews").checked = setting.REVIEW;
+    browser.storage.local.get(SHOW_LOGGED).then((setting) => {
+        if (setting.SHOW_LOGGED) {
+            document.getElementById("show-logged").checked = setting.SHOW_LOGGED;
+        } else {
+            browser.storage.local.get(RATING).then((setting) => {
+                document.getElementById("ratings").checked = setting.RATING;
+            });
+            browser.storage.local.get(REVIEW).then((setting) => {
+                document.getElementById("reviews").checked = setting.REVIEW;
+            });
+        }
     });
 }
 

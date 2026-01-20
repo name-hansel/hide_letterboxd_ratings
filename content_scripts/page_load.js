@@ -18,11 +18,17 @@ function waitForElement(className) {
 
 // Update visibility for rating and review when rating elements are found
 waitForElement(SETTING_RATING.className).then(() => {
-    browser.storage.local.get(SETTING_RATING.name).then(({RATING}) => {
-        updateElementVisibility(SETTING_RATING.className, RATING);
-    });
+    browser.storage.local.get(SHOW_LOGGED.name).then(({SHOW_LOGGED}) => {
+        if (SHOW_LOGGED) {
+            console.log("SHOW ONLY LOGGED!");
+        } else {
+            browser.storage.local.get(SETTING_RATING.name).then(({RATING}) => {
+                updateElementVisibility(SETTING_RATING.className, RATING);
+            });
 
-    browser.storage.local.get(SETTING_REVIEW.name).then(({REVIEW}) => {
-        updateElementVisibility(SETTING_REVIEW.className, REVIEW);
+            browser.storage.local.get(SETTING_REVIEW.name).then(({REVIEW}) => {
+                updateElementVisibility(SETTING_REVIEW.className, REVIEW);
+            });
+        }
     });
 })
