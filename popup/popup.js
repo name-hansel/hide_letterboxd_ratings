@@ -80,12 +80,12 @@ function updatePopupFromStorage() {
     });
 }
 
-function updateVisibility(tabs, type, show) {
+function updateVisibility(tabs, type, hide) {
     browser.tabs
         .query({active: true, currentWindow: true})
         .then(() => {
             browser.tabs.sendMessage(tabs[0].id, {
-                type, show,
+                type, hide
             });
         })
         .catch(reportScriptError);

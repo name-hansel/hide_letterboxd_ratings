@@ -1,23 +1,23 @@
-function updateElementVisibility(elementClassName, show) {
+function updateElementVisibility(elementClassName, hide) {
     document.querySelectorAll(`.${elementClassName}`).forEach((element) => {
-        element.style.display = show ? "none" : "";
+        element.style.display = hide ? "none" : "";
     });
 }
 
 
 function updatePageVisibility(request, sender, sendResponse) {
     if (request.type === SETTING_RATING.name) {
-        updateElementVisibility(SETTING_RATING.className, request.show);
+        updateElementVisibility(SETTING_RATING.className, request.hide);
     }
 
     if (request.type === SETTING_REVIEW.name) {
-        updateElementVisibility(SETTING_REVIEW.className, request.show);
+        updateElementVisibility(SETTING_REVIEW.className, request.hide);
     }
 
     if (request.type === SETTING_SHOW_LOGGED.name) {
-        const showRatingsReviews = isFilmWatched();
-        updateElementVisibility(SETTING_RATING.className, !showRatingsReviews);
-        updateElementVisibility(SETTING_REVIEW.className, !showRatingsReviews);
+        const hideRatingsReviews = isFilmNotWatched();
+        updateElementVisibility(SETTING_RATING.className, hideRatingsReviews);
+        updateElementVisibility(SETTING_REVIEW.className, hideRatingsReviews);
     }
 }
 
