@@ -1,6 +1,7 @@
 const RATING = "RATING";
 const REVIEW = "REVIEW";
 const SHOW_LOGGED = "SHOW_LOGGED";
+const RESET = "RESET";
 const CHANGE = "change";
 
 function setupPopup() {
@@ -43,15 +44,20 @@ function setupPopup() {
         });
 
         // Disable / enable rating and review checkboxes
-        ratingsCheckbox.disabled = event.target.checked;
-        reviewsCheckbox.disabled = event.target.checked;
+        const showOnlyLoggedChecked = event.target.checked;
+        ratingsCheckbox.disabled = showOnlyLoggedChecked;
+        reviewsCheckbox.disabled = showOnlyLoggedChecked;
 
         browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
-            updateVisibility(tabs, SHOW_LOGGED, null);
+            if (showOnlyLoggedChecked) {
+                updateVisibility(tabs, SHOW_LOGGED, null);
+            } else {
+                updateVisibility(tabs, RESET, null);
+            }
         }).catch(reportScriptError);
 
         browser.storage.local.set({
-            SHOW_LOGGED: event.target.checked
+            SHOW_LOGGED: showOnlyLoggedChecked
         });
     })
 }

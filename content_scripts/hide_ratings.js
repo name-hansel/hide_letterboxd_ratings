@@ -19,6 +19,11 @@ function updatePageVisibility(request, sender, sendResponse) {
         updateElementVisibility(SETTING_RATING.className, hideRatingsReviews);
         updateElementVisibility(SETTING_REVIEW.className, hideRatingsReviews);
     }
+
+    if (request.type === SETTING_RESET.name) {
+        updateElementVisibility(SETTING_RATING.className, false);
+        updateElementVisibility(SETTING_REVIEW.className, false);
+    }
 }
 
 browser.runtime.onMessage.addListener(updatePageVisibility);
