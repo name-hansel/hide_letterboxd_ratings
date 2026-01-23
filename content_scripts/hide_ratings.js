@@ -13,6 +13,12 @@ function updatePageVisibility(request, sender, sendResponse) {
     if (request.type === SETTING_REVIEW.name) {
         updateElementVisibility(SETTING_REVIEW.className, request.show);
     }
+
+    if (request.type === SETTING_SHOW_LOGGED.name) {
+        const showRatingsReviews = isFilmWatched();
+        updateElementVisibility(SETTING_RATING.className, !showRatingsReviews);
+        updateElementVisibility(SETTING_REVIEW.className, !showRatingsReviews);
+    }
 }
 
 browser.runtime.onMessage.addListener(updatePageVisibility);

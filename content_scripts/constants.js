@@ -6,6 +6,6 @@ const SETTING_REVIEW = {
     name: "REVIEW", className: "film-recent-reviews",
 };
 
-const SHOW_LOGGED = {
+const SETTING_SHOW_LOGGED = {
     name: "SHOW_LOGGED"
 }

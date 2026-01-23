@@ -16,11 +16,18 @@ function waitForElement(className) {
     });
 }
 
+function isFilmWatched() {
+    const action = document.querySelector(".actions-row1");
+    return action.innerText.split("\n")[0] !== "Watch";
+}
+
 // Update visibility for rating and review when rating elements are found
 waitForElement(SETTING_RATING.className).then(() => {
-    browser.storage.local.get(SHOW_LOGGED.name).then(({SHOW_LOGGED}) => {
+    browser.storage.local.get(SETTING_SHOW_LOGGED.name).then(({SHOW_LOGGED}) => {
         if (SHOW_LOGGED) {
-            console.log("SHOW ONLY LOGGED!");
+            const showRatingsReviews = isFilmWatched();
+            updateElementVisibility(SETTING_RATING.className, showRatingsReviews);
+            updateElementVisibility(SETTING_REVIEW.className, showRatingsReviews);
         } else {
             browser.storage.local.get(SETTING_RATING.name).then(({RATING}) => {
                 updateElementVisibility(SETTING_RATING.className, RATING);

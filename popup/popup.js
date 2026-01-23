@@ -34,21 +34,25 @@ function setupPopup() {
         ratingsCheckbox.checked = false;
         browser.storage.local.set({
             RATING: false
-        })
+        });
 
         let reviewsCheckbox = document.getElementById("reviews");
         reviewsCheckbox.checked = false;
         browser.storage.local.set({
             REVIEW: false
-        })
+        });
 
         // Disable / enable rating and review checkboxes
         ratingsCheckbox.disabled = event.target.checked;
         reviewsCheckbox.disabled = event.target.checked;
 
+        browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
+            updateVisibility(tabs, SHOW_LOGGED, null);
+        }).catch(reportScriptError);
+
         browser.storage.local.set({
             SHOW_LOGGED: event.target.checked
-        })
+        });
     })
 }
 
@@ -58,14 +62,19 @@ function reportScriptError(error) {
 
 function updatePopupFromStorage() {
     browser.storage.local.get(SHOW_LOGGED).then((setting) => {
+        let ratingCheckbox = document.getElementById("ratings");
+        let reviewsCheckbox = document.getElementById("reviews");
+
         if (setting.SHOW_LOGGED) {
             document.getElementById("show-logged").checked = setting.SHOW_LOGGED;
+            ratingCheckbox.disabled = true;
+            reviewsCheckbox.disabled = true;
         } else {
             browser.storage.local.get(RATING).then((setting) => {
-                document.getElementById("ratings").checked = setting.RATING;
+                ratingCheckbox.checked = setting.RATING;
             });
             browser.storage.local.get(REVIEW).then((setting) => {
-                document.getElementById("reviews").checked = setting.REVIEW;
+                reviewsCheckbox.checked = setting.REVIEW;
             });
         }
     });
@@ -82,6 +91,7 @@ function updateVisibility(tabs, type, show) {
         .catch(reportScriptError);
 }
 
+
 function updatePopupEditability() {
     const pattern = "*://letterboxd.com/film/*";
     const regexPattern = new RegExp(`^${pattern.replace(/\./g, "\\.").replace(/\*/g, ".*")}$`);
@@ -93,7 +103,6 @@ function updatePopupEditability() {
     });
 }
 
-updatePopupEditability();
 browser.tabs
     .executeScript({
         file: "/content_scripts/hide_ratings.js",
@@ -101,5 +110,6 @@ browser.tabs
     .then(() => {
         updatePopupFromStorage();
         setupPopup();
+        updatePopupEditability();
     })
     .catch(reportScriptError);
