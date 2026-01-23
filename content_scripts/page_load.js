@@ -6,6 +6,8 @@ function isWatchElementLoaded(element) {
     return element.innerText.split("\n")[0].indexOf("Watch") !== -1;
 }
 
+// TODO: Show/hide ratings when user marks movie as Watched / Unwatched on the page
+
 function waitForElement(selector, callback) {
     const element = document.querySelector(selector);
     if (isWatchElementLoaded(element)) {
