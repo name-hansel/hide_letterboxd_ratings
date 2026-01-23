@@ -1,18 +1,28 @@
-function waitForElement(className) {
-    return new Promise((resolve) => {
-        if (document.querySelector(`.${className}`)) {
-            resolve();
-            return;
+function isWatchElementLoaded(element) {
+    if (!element) {
+        return false;
+    }
+
+    return element.innerText.split("\n")[0].indexOf("Watch") !== -1;
+}
+
+function waitForElement(selector, callback) {
+    const element = document.querySelector(selector);
+    if (isWatchElementLoaded(element)) {
+        callback();
+        return;
+    }
+
+    const observer = new MutationObserver(() => {
+        const el = document.querySelector(selector);
+        if (isWatchElementLoaded(el)) {
+            observer.disconnect();
+            callback();
         }
+    });
 
-        const observer = new MutationObserver(() => {
-            if (document.querySelector(`.${className}`)) {
-                observer.disconnect();
-                resolve();
-            }
-        });
-
-        observer.observe(document.body, {childList: true, subtree: true});
+    observer.observe(document.body, {
+        childList: true, subtree: true, characterData: true
     });
 }
 
@@ -21,8 +31,7 @@ function isFilmNotWatched() {
     return action.innerText.split("\n")[0] === "Watch";
 }
 
-// Update visibility for rating and review when rating elements are found
-waitForElement(SETTING_RATING.className).then(() => {
+waitForElement(".actions-row1", () => {
     browser.storage.local.get(SETTING_SHOW_LOGGED.name).then(({SHOW_LOGGED}) => {
         if (SHOW_LOGGED) {
             const hideRatingsReviews = isFilmNotWatched();
@@ -38,4 +47,4 @@ waitForElement(SETTING_RATING.className).then(() => {
             });
         }
     });
-})
+});
