@@ -3,10 +3,22 @@ const REVIEW = "REVIEW";
 const SHOW_LOGGED = "SHOW_LOGGED";
 const CHANGE = "change";
 
+function getHideRatingCheckbox() {
+    return document.getElementById("ratings");
+}
+
+function getHideReviewCheckbox() {
+    return document.getElementById("reviews");
+}
+
+function getShowLoggedCheckbox() {
+    return document.getElementById("show-logged");
+}
+
 function setupPopup() {
-    const ratingCheckbox = document.getElementById("ratings");
-    const reviewCheckbox = document.getElementById("reviews");
-    const showLoggedCheckbox = document.getElementById("show-logged");
+    const ratingCheckbox = getHideRatingCheckbox();
+    const reviewCheckbox = getHideReviewCheckbox();
+    const showLoggedCheckbox = getShowLoggedCheckbox();
 
     ratingCheckbox.addEventListener(CHANGE, (event) => {
         browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
@@ -34,8 +46,8 @@ function setupPopup() {
 
     showLoggedCheckbox.addEventListener(CHANGE, (event) => {
         const showOnlyLoggedChecked = event.target.checked;
-        const hideRatings = document.getElementById("ratings").checked;
-        const hideReviews = document.getElementById("reviews").checked;
+        const hideRatings = ratingCheckbox.checked;
+        const hideReviews = reviewCheckbox.checked;
 
         browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
             updateVisibility(tabs, RATING, hideRatings, showOnlyLoggedChecked);
@@ -53,15 +65,14 @@ function reportScriptError(error) {
 }
 
 function updatePopupFromStorage() {
-    browser.storage.local.get(SHOW_LOGGED).then((setting) => {
-        document.getElementById("show-logged").checked = setting.SHOW_LOGGED;
-    });
-
     browser.storage.local.get(RATING).then((setting) => {
-        document.getElementById("ratings").checked = setting.RATING;
+        getHideRatingCheckbox().checked = setting.RATING;
     });
     browser.storage.local.get(REVIEW).then((setting) => {
-        document.getElementById("reviews").checked = setting.REVIEW;
+        getHideReviewCheckbox().checked = setting.REVIEW;
+    });
+    browser.storage.local.get(SHOW_LOGGED).then((setting) => {
+        getShowLoggedCheckbox().checked = setting.SHOW_LOGGED;
     });
 }
 
@@ -76,8 +87,9 @@ function updateVisibility(tabs, type, hide, showOnlyLogged) {
         .catch(reportScriptError);
 }
 
-
 function updatePopupEditability() {
+    updateShowLoggedCheckbox();
+
     const pattern = "*://letterboxd.com/film/*";
     const regexPattern = new RegExp(`^${pattern.replace(/\./g, "\\.").replace(/\*/g, ".*")}$`);
 
@@ -89,11 +101,13 @@ function updatePopupEditability() {
 }
 
 function updateShowLoggedCheckbox() {
-    const showLoggedCheckbox = document.getElementById("show-logged");
-    const hideAnything = document.getElementById("ratings").checked || document.getElementById("reviews").checked;
+    const showLoggedCheckbox = getShowLoggedCheckbox();
+    const hideSomething = getHideRatingCheckbox().checked || getHideReviewCheckbox().checked;
 
-    showLoggedCheckbox.disabled = !hideAnything;
-    if (!hideAnything) {
+    // TODO: Show Logged Only checkbox behaves weirdly when re-opening pop-up
+
+    showLoggedCheckbox.disabled = !hideSomething;
+    if (!hideSomething) {
         showLoggedCheckbox.checked = false;
         browser.storage.local.set({
             SHOW_LOGGED: false
@@ -106,8 +120,8 @@ browser.tabs
         file: "/content_scripts/hide_ratings.js",
     })
     .then(() => {
-        updatePopupFromStorage();
         setupPopup();
+        updatePopupFromStorage();
         updatePopupEditability();
     })
     .catch(reportScriptError);
