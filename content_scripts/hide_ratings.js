@@ -6,15 +6,18 @@ function updateElementVisibility(elementClassName, hide) {
 
 
 function updatePageVisibility(request, sender, sendResponse) {
-    const filmNotWatched = isFilmNotWatched();
-    const showOnlyLogged = request.showOnlyLogged;
+    const filmWatched = !isFilmNotWatched();
+    let hide = request.hide;
+    if (filmWatched && request.showOnlyLogged) {
+        hide = false;
+    }
 
     if (request.type === SETTING_RATING.name) {
-        updateElementVisibility(SETTING_RATING.className, request.hide || (filmNotWatched && showOnlyLogged));
+        updateElementVisibility(SETTING_RATING.className, hide);
     }
 
     if (request.type === SETTING_REVIEW.name) {
-        updateElementVisibility(SETTING_REVIEW.className, request.hide || (filmNotWatched && showOnlyLogged));
+        updateElementVisibility(SETTING_REVIEW.className, hide);
     }
 }
 

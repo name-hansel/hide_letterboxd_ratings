@@ -1,7 +1,6 @@
 const RATING = "RATING";
 const REVIEW = "REVIEW";
 const SHOW_LOGGED = "SHOW_LOGGED";
-const RESET = "RESET";
 const CHANGE = "change";
 
 function setupPopup() {
@@ -12,34 +11,31 @@ function setupPopup() {
     ratingCheckbox.addEventListener(CHANGE, (event) => {
         browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
             const checked = event.target.checked;
-            updateVisibility(tabs, RATING, checked);
+            updateVisibility(tabs, RATING, checked, showLoggedCheckbox.checked);
             browser.storage.local.set({
                 RATING: checked
             })
+
+            updateShowLoggedCheckbox();
         }).catch(reportScriptError);
     });
 
     reviewCheckbox.addEventListener(CHANGE, (event) => {
         browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
             const checked = event.target.checked;
-            updateVisibility(tabs, REVIEW, checked);
+            updateVisibility(tabs, REVIEW, checked, showLoggedCheckbox.checked);
             browser.storage.local.set({
                 REVIEW: checked
             })
+
+            updateShowLoggedCheckbox();
         }).catch(reportScriptError);
     });
 
     showLoggedCheckbox.addEventListener(CHANGE, (event) => {
         const showOnlyLoggedChecked = event.target.checked;
-        var hideRatings = false;
-        var hideReviews = false;
-
-        browser.storage.local.get(RATING).then((setting) => {
-            hideRatings = setting.RATING;
-        });
-        browser.storage.local.get(REVIEW).then((setting) => {
-            hideReviews = setting.REVIEW;
-        });
+        const hideRatings = document.getElementById("ratings").checked;
+        const hideReviews = document.getElementById("reviews").checked;
 
         browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
             updateVisibility(tabs, RATING, hideRatings, showOnlyLoggedChecked);
@@ -90,6 +86,19 @@ function updatePopupEditability() {
             element.disabled = !regexPattern.test(tabs[0].url);
         }
     });
+}
+
+function updateShowLoggedCheckbox() {
+    const showLoggedCheckbox = document.getElementById("show-logged");
+    const hideAnything = document.getElementById("ratings").checked || document.getElementById("reviews").checked;
+
+    showLoggedCheckbox.disabled = !hideAnything;
+    if (!hideAnything) {
+        showLoggedCheckbox.checked = false;
+        browser.storage.local.set({
+            SHOW_LOGGED: false
+        });
+    }
 }
 
 browser.tabs
