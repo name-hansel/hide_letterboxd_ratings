@@ -35,18 +35,13 @@ function isFilmNotWatched() {
 
 waitForElement(".actions-row1", () => {
     browser.storage.local.get(SETTING_SHOW_LOGGED.name).then(({SHOW_LOGGED}) => {
-        if (SHOW_LOGGED) {
-            const hideRatingsReviews = isFilmNotWatched();
-            updateElementVisibility(SETTING_RATING.className, hideRatingsReviews);
-            updateElementVisibility(SETTING_REVIEW.className, hideRatingsReviews);
-        } else {
-            browser.storage.local.get(SETTING_RATING.name).then(({RATING}) => {
-                updateElementVisibility(SETTING_RATING.className, RATING);
-            });
+        browser.storage.local.get(SETTING_RATING.name).then(({RATING}) => {
+            updateElementVisibility(SETTING_RATING.className, RATING || (isFilmNotWatched() && SHOW_LOGGED));
+        });
 
-            browser.storage.local.get(SETTING_REVIEW.name).then(({REVIEW}) => {
-                updateElementVisibility(SETTING_REVIEW.className, REVIEW);
-            });
-        }
+        browser.storage.local.get(SETTING_REVIEW.name).then(({REVIEW}) => {
+            updateElementVisibility(SETTING_REVIEW.className, REVIEW || (isFilmNotWatched() && SHOW_LOGGED));
+        });
+
     });
 });

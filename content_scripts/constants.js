@@ -9,7 +9,3 @@ const SETTING_REVIEW = {
 const SETTING_SHOW_LOGGED = {
     name: "SHOW_LOGGED"
 };
-
-const SETTING_RESET = {
-    name: "RESET"
-};

@@ -11,7 +11,7 @@
     }
   },
   "name": "hide letterboxd ratings and reviews",
-  "version": "2.1",
+  "version": "3.0",
   "description": "hide ratings and reviews on letterboxd",
   "homepage_url": "https://github.com/name-hansel/hide_letterboxd_ratings",
   "icons": {
