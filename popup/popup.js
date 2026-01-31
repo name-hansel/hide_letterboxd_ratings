@@ -66,12 +66,30 @@ function reportScriptError(error) {
 
 function updatePopupFromStorage() {
     browser.storage.local.get(RATING).then((setting) => {
+        if (!setting.RATING) {
+            browser.storage.local.set({
+                RATING: false
+            });
+        }
         getHideRatingCheckbox().checked = setting.RATING;
     });
+
     browser.storage.local.get(REVIEW).then((setting) => {
+        if (!setting.REVIEW) {
+            browser.storage.local.set({
+                REVIEW: false
+            });
+        }
         getHideReviewCheckbox().checked = setting.REVIEW;
     });
+
     browser.storage.local.get(SHOW_LOGGED).then((setting) => {
+        if (!setting.SHOW_LOGGED) {
+            browser.storage.local.set({
+                SHOW_LOGGED: false
+            });
+        }
+
         getShowLoggedCheckbox().checked = setting.SHOW_LOGGED;
     });
 }
@@ -88,8 +106,6 @@ function updateVisibility(tabs, type, hide, showOnlyLogged) {
 }
 
 function updatePopupEditability() {
-    updateShowLoggedCheckbox();
-
     const pattern = "*://letterboxd.com/film/*";
     const regexPattern = new RegExp(`^${pattern.replace(/\./g, "\\.").replace(/\*/g, ".*")}$`);
 
@@ -103,8 +119,6 @@ function updatePopupEditability() {
 function updateShowLoggedCheckbox() {
     const showLoggedCheckbox = getShowLoggedCheckbox();
     const hideSomething = getHideRatingCheckbox().checked || getHideReviewCheckbox().checked;
-
-    // TODO: Show Logged Only checkbox behaves weirdly when re-opening pop-up
 
     showLoggedCheckbox.disabled = !hideSomething;
     if (!hideSomething) {

@@ -1,5 +1,4 @@
 function visibilityUpdate() {
-
     const pattern = "*://letterboxd.com/film/*";
     const regexPattern = new RegExp(`^${pattern.replace(/\./g, "\\.").replace(/\*/g, ".*")}$`);
 

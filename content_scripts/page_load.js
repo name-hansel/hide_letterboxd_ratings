@@ -3,7 +3,7 @@ function isWatchElementLoaded(element) {
         return false;
     }
 
-    return element.innerText.split("\n")[0].indexOf("Watch") !== -1;
+    return element.innerText.split("\n").length > 0;
 }
 
 // TODO: Show/hide ratings when user marks movie as Watched / Unwatched on the page
@@ -36,12 +36,11 @@ function isFilmNotWatched() {
 waitForElement(".actions-row1", () => {
     browser.storage.local.get(SETTING_SHOW_LOGGED.name).then(({SHOW_LOGGED}) => {
         browser.storage.local.get(SETTING_RATING.name).then(({RATING}) => {
-            updateElementVisibility(SETTING_RATING.className, RATING || (isFilmNotWatched() && SHOW_LOGGED));
+            updateElementVisibility(SETTING_RATING.className, RATING, SHOW_LOGGED);
         });
 
         browser.storage.local.get(SETTING_REVIEW.name).then(({REVIEW}) => {
-            updateElementVisibility(SETTING_REVIEW.className, REVIEW || (isFilmNotWatched() && SHOW_LOGGED));
+            updateElementVisibility(SETTING_REVIEW.className, REVIEW, SHOW_LOGGED);
         });
-
     });
 });
