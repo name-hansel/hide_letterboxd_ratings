@@ -99,7 +99,7 @@ function updateVisibility(tabs, type, hide, showOnlyLogged) {
         .query({active: true, currentWindow: true})
         .then(() => {
             browser.tabs.sendMessage(tabs[0].id, {
-                type, hide, showOnlyLogged
+                REQUEST_TYPE: type, REQUEST_HIDE: hide, REQUEST_SHOW_ONLY_LOGGED: showOnlyLogged
             });
         })
         .catch(reportScriptError);

@@ -28,19 +28,19 @@ function waitForElement(selector, callback) {
     });
 }
 
-function isFilmNotWatched() {
+function isFilmWatched() {
     const action = document.querySelector(".actions-row1");
-    return action.innerText.split("\n")[0] === "Watch";
+    return action.innerText.split("\n")[0] !== "Watch";
 }
 
 waitForElement(".actions-row1", () => {
     browser.storage.local.get(SETTING_SHOW_LOGGED.name).then(({SHOW_LOGGED}) => {
         browser.storage.local.get(SETTING_RATING.name).then(({RATING}) => {
-            updateElementVisibility(SETTING_RATING.className, RATING, SHOW_LOGGED);
+            updateVisibility(SETTING_RATING.className, RATING, SHOW_LOGGED);
         });
 
         browser.storage.local.get(SETTING_REVIEW.name).then(({REVIEW}) => {
-            updateElementVisibility(SETTING_REVIEW.className, REVIEW, SHOW_LOGGED);
+            updateVisibility(SETTING_REVIEW.className, REVIEW, SHOW_LOGGED);
         });
     });
 });

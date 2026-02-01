@@ -24,14 +24,7 @@
       ],
       "js": [
         "content_scripts/constants.js",
-        "content_scripts/hide_ratings.js"
-      ]
-    },
-    {
-      "matches": [
-        "*://letterboxd.com/film/*"
-      ],
-      "js": [
+        "content_scripts/hide_ratings.js",
         "content_scripts/page_load.js"
       ]
     }

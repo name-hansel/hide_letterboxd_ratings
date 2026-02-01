@@ -11,11 +11,19 @@ function visibilityUpdate() {
             });
 
             browser.storage.local.get("RATING").then((setting) => {
-                browser.tabs.sendMessage(tabs[0].id, {type: "RATING", hide: setting.RATING, showLogged});
+                browser.tabs.sendMessage(tabs[0].id, {
+                    REQUEST_TYPE: "RATING",
+                    REQUEST_HIDE: setting.RATING,
+                    REQUEST_SHOW_ONLY_LOGGED: showLogged
+                });
             });
 
             browser.storage.local.get("REVIEW").then((setting) => {
-                browser.tabs.sendMessage(tabs[0].id, {type: "REVIEW", hide: setting.REVIEW, showLogged});
+                browser.tabs.sendMessage(tabs[0].id, {
+                    REQUEST_TYPE: "REVIEW",
+                    REQUEST_HIDE: setting.REVIEW,
+                    REQUEST_SHOW_ONLY_LOGGED: showLogged
+                });
             });
         }
 
