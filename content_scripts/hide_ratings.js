@@ -3,7 +3,7 @@ REQUEST_SHOW_ONLY_LOGGED = "showOnlyLogged";
 REQUEST_TYPE = "type";
 
 function updateVisibility(elementClassName, hide, showLogged) {
-    if(showLogged && isFilmWatched()) {
+    if (showLogged && isFilmWatched()) {
         hide = false;
     }
 

@@ -3,7 +3,8 @@ function isWatchElementLoaded(element) {
         return false;
     }
 
-    return element.innerText.split("\n").length > 0;
+    const watchAction = element.innerText.split("\n")[0];
+    return watchAction === "Watch" || watchAction === "Logged";
 }
 
 // TODO: Show/hide ratings when user marks movie as Watched / Unwatched on the page
