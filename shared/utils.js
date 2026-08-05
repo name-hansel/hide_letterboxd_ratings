@@ -29,3 +29,20 @@ const sendVisibilityUpdate = (tabId, key, hide, showLogged) => {
         [MESSAGE.SHOW_LOGGED]: showLogged
     });
 }
+
+function isFilmWatched() {
+    const action = document.querySelector(".actions-row1");
+    return action.innerText.split("\n")[0] !== "Watch";
+}
+
+const shouldHide = (hide, showLogged) => {
+    if (!hide) {
+        return false;
+    }
+
+    if (showLogged && isFilmWatched()) {
+        return false;
+    }
+
+    return true;
+}

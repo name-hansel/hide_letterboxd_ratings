@@ -4,7 +4,7 @@ function visibilityUpdate() {
             Settings.getAll().then((settings) => {
                 const showLogged = settings[SETTINGS.SHOW_LOGGED.key];
                 sendVisibilityUpdate(tabs[0].id, SETTINGS.RATING.key, settings[SETTINGS.RATING.key], showLogged);
-                sendVisibilityUpdate(tabs[0].id, settings, SETTINGS.REVIEW.key, settings[SETTINGS.REVIEW.key], showLogged);
+                sendVisibilityUpdate(tabs[0].id, SETTINGS.REVIEW.key, settings[SETTINGS.REVIEW.key], showLogged);
             });
         }
     });

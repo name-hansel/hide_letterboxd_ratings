@@ -5,10 +5,7 @@ function updateElementVisibility(elementClassName, hide) {
 }
 
 function updatePageVisibility(request, sender, sendResponse) {
-    let hide = request[MESSAGE.HIDE];
-    if (isFilmWatched() && request[MESSAGE.SHOW_LOGGED] === true) {
-        hide = false;
-    }
+    const hide = shouldHide(request[MESSAGE.HIDE], request[MESSAGE.SHOW_LOGGED] === true);
 
     if (request[MESSAGE.KEY] === SETTINGS.RATING.key) {
         updateElementVisibility(SETTINGS.RATING.className, hide);

@@ -30,16 +30,7 @@ function waitForElement(selector, callback) {
 }
 
 function updateVisibility(elementClassName, hide, showLogged) {
-    if (showLogged && isFilmWatched()) {
-        hide = false;
-    }
-
-    updateElementVisibility(elementClassName, hide);
-}
-
-function isFilmWatched() {
-    const action = document.querySelector(".actions-row1");
-    return action.innerText.split("\n")[0] !== "Watch";
+    updateElementVisibility(elementClassName, shouldHide(hide, showLogged));
 }
 
 waitForElement(".actions-row1", () => {
