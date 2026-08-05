@@ -74,12 +74,9 @@ function updateVisibility(tabs, type, hide, showOnlyLogged) {
 }
 
 function updatePopupEditability() {
-    const pattern = "*://letterboxd.com/film/*";
-    const regexPattern = new RegExp(`^${pattern.replace(/\./g, "\\.").replace(/\*/g, ".*")}$`);
-
     browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
         for (const element of document.getElementsByTagName("input")) {
-            element.disabled = !regexPattern.test(tabs[0].url);
+            element.disabled = !isFilmPage(tabs[0].url);
         }
     });
 }

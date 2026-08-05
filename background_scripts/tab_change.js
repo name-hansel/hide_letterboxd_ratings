@@ -1,9 +1,6 @@
 function visibilityUpdate() {
-    const pattern = "*://letterboxd.com/film/*";
-    const regexPattern = new RegExp(`^${pattern.replace(/\./g, "\\.").replace(/\*/g, ".*")}$`);
-
     browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
-        if (regexPattern.test(tabs[0].url)) {
+        if (isFilmPage(tabs[0].url)) {
             Settings.getAll().then((settings) => {
                 const showLogged = settings[SETTINGS.SHOW_LOGGED.key];
 
