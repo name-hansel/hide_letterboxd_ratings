@@ -4,24 +4,18 @@ function visibilityUpdate() {
 
     browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
         if (regexPattern.test(tabs[0].url)) {
-            var showLogged = false;
+            Settings.getAll().then((settings) => {
+                const showLogged = settings[SETTINGS.SHOW_LOGGED.key];
 
-            browser.storage.local.get("SHOW_LOGGED").then((setting) => {
-                showLogged = setting.SHOW_LOGGED;
-            });
-
-            browser.storage.local.get("RATING").then((setting) => {
                 browser.tabs.sendMessage(tabs[0].id, {
-                    REQUEST_TYPE: "RATING",
-                    REQUEST_HIDE: setting.RATING,
+                    REQUEST_TYPE: SETTINGS.RATING.key,
+                    REQUEST_HIDE: settings[SETTINGS.RATING.key],
                     REQUEST_SHOW_ONLY_LOGGED: showLogged
                 });
-            });
 
-            browser.storage.local.get("REVIEW").then((setting) => {
                 browser.tabs.sendMessage(tabs[0].id, {
-                    REQUEST_TYPE: "REVIEW",
-                    REQUEST_HIDE: setting.REVIEW,
+                    REQUEST_TYPE: SETTINGS.REVIEW.key,
+                    REQUEST_HIDE: settings[SETTINGS.REVIEW.key],
                     REQUEST_SHOW_ONLY_LOGGED: showLogged
                 });
             });

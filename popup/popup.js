@@ -1,18 +1,15 @@
-const RATING = "RATING";
-const REVIEW = "REVIEW";
-const SHOW_LOGGED = "SHOW_LOGGED";
 const CHANGE = "change";
 
 function getHideRatingCheckbox() {
-    return document.getElementById("ratings");
+    return document.getElementById("hide-ratings-checkbox");
 }
 
 function getHideReviewCheckbox() {
-    return document.getElementById("reviews");
+    return document.getElementById("hide-reviews-checkbox");
 }
 
 function getShowLoggedCheckbox() {
-    return document.getElementById("show-logged");
+    return document.getElementById("show-logged-checkbox");
 }
 
 function setupPopup() {
@@ -23,11 +20,8 @@ function setupPopup() {
     ratingCheckbox.addEventListener(CHANGE, (event) => {
         browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
             const checked = event.target.checked;
-            updateVisibility(tabs, RATING, checked, showLoggedCheckbox.checked);
-            browser.storage.local.set({
-                RATING: checked
-            })
-
+            updateVisibility(tabs, SETTINGS.RATING.key, checked, showLoggedCheckbox.checked);
+            void Settings.setRating(checked);
             updateShowLoggedCheckbox();
         }).catch(reportScriptError);
     });
@@ -35,10 +29,8 @@ function setupPopup() {
     reviewCheckbox.addEventListener(CHANGE, (event) => {
         browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
             const checked = event.target.checked;
-            updateVisibility(tabs, REVIEW, checked, showLoggedCheckbox.checked);
-            browser.storage.local.set({
-                REVIEW: checked
-            })
+            updateVisibility(tabs, SETTINGS.REVIEW.key, checked, showLoggedCheckbox.checked);
+            void Settings.setReview(checked);
 
             updateShowLoggedCheckbox();
         }).catch(reportScriptError);
@@ -50,13 +42,11 @@ function setupPopup() {
         const hideReviews = reviewCheckbox.checked;
 
         browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
-            updateVisibility(tabs, RATING, hideRatings, showOnlyLoggedChecked);
-            updateVisibility(tabs, REVIEW, hideReviews, showOnlyLoggedChecked);
+            updateVisibility(tabs, SETTINGS.RATING.key, hideRatings, showOnlyLoggedChecked);
+            updateVisibility(tabs, SETTINGS.REVIEW.key, hideReviews, showOnlyLoggedChecked);
         }).catch(reportScriptError);
 
-        browser.storage.local.set({
-            SHOW_LOGGED: showOnlyLoggedChecked
-        });
+        void Settings.setShowLogged(showOnlyLoggedChecked);
     })
 }
 
@@ -65,32 +55,10 @@ function reportScriptError(error) {
 }
 
 function updatePopupFromStorage() {
-    browser.storage.local.get(RATING).then((setting) => {
-        if (!setting.RATING) {
-            browser.storage.local.set({
-                RATING: false
-            });
-        }
-        getHideRatingCheckbox().checked = setting.RATING;
-    });
-
-    browser.storage.local.get(REVIEW).then((setting) => {
-        if (!setting.REVIEW) {
-            browser.storage.local.set({
-                REVIEW: false
-            });
-        }
-        getHideReviewCheckbox().checked = setting.REVIEW;
-    });
-
-    browser.storage.local.get(SHOW_LOGGED).then((setting) => {
-        if (!setting.SHOW_LOGGED) {
-            browser.storage.local.set({
-                SHOW_LOGGED: false
-            });
-        }
-
-        getShowLoggedCheckbox().checked = setting.SHOW_LOGGED;
+    Settings.getAll().then((settings) => {
+        getHideRatingCheckbox().checked = settings[SETTINGS.RATING.key];
+        getHideReviewCheckbox().checked = settings[SETTINGS.REVIEW.key];
+        getShowLoggedCheckbox().checked = settings[SETTINGS.SHOW_LOGGED.key];
     });
 }
 
@@ -123,9 +91,7 @@ function updateShowLoggedCheckbox() {
     showLoggedCheckbox.disabled = !hideSomething;
     if (!hideSomething) {
         showLoggedCheckbox.checked = false;
-        browser.storage.local.set({
-            SHOW_LOGGED: false
-        });
+        void Settings.setShowLogged(false);
     }
 }
 

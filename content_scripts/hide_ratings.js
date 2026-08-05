@@ -22,12 +22,12 @@ function updatePageVisibility(request, sender, sendResponse) {
         hide = false;
     }
 
-    if (request.REQUEST_TYPE === SETTING_RATING.name) {
-        updateElementVisibility(SETTING_RATING.className, hide);
+    if (request.REQUEST_TYPE === SETTINGS.RATING.key) {
+        updateElementVisibility(SETTINGS.RATING.className, hide);
     }
 
-    if (request.REQUEST_TYPE === SETTING_REVIEW.name) {
-        updateElementVisibility(SETTING_REVIEW.className, hide);
+    if (request.REQUEST_TYPE === SETTINGS.REVIEW.key) {
+        updateElementVisibility(SETTINGS.REVIEW.className, hide);
     }
 }
 

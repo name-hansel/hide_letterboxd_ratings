@@ -23,7 +23,8 @@
         "*://letterboxd.com/film/*"
       ],
       "js": [
-        "content_scripts/constants.js",
+        "shared/constants.js",
+        "shared/settings.js",
         "content_scripts/hide_ratings.js",
         "content_scripts/page_load.js"
       ]
@@ -31,6 +32,8 @@
   ],
   "background": {
     "scripts": [
+      "shared/constants.js",
+      "shared/settings.js",
       "background_scripts/tab_change.js"
     ]
   },

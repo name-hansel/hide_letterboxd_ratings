@@ -35,13 +35,9 @@ function isFilmWatched() {
 }
 
 waitForElement(".actions-row1", () => {
-    browser.storage.local.get(SETTING_SHOW_LOGGED.name).then(({SHOW_LOGGED}) => {
-        browser.storage.local.get(SETTING_RATING.name).then(({RATING}) => {
-            updateVisibility(SETTING_RATING.className, RATING, SHOW_LOGGED);
-        });
-
-        browser.storage.local.get(SETTING_REVIEW.name).then(({REVIEW}) => {
-            updateVisibility(SETTING_REVIEW.className, REVIEW, SHOW_LOGGED);
-        });
-    });
+    Settings.getAll().then((settings) => {
+        const showLogged = settings[SETTINGS.SHOW_LOGGED.key];
+        updateVisibility(SETTINGS.RATING.className, settings[SETTINGS.RATING.key], showLogged);
+        updateVisibility(SETTINGS.REVIEW.className, settings[SETTINGS.REVIEW.key], showLogged);
+    })
 });

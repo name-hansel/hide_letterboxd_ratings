@@ -13,20 +13,22 @@
 <div class="settings-container">
     <div>
         <div class="setting-section">
-            <input type="checkbox" id="ratings" name="ratings" value="yes">
-            <label for="ratings">hide ratings</label>
+            <input type="checkbox" id="hide-ratings-checkbox" name="hide-ratings-checkbox" value="yes">
+            <label for="hide-ratings-checkbox">hide ratings</label>
         </div>
 
         <div class="setting-section">
-            <input type="checkbox" id="reviews" name="reviews" value="yes">
-            <label for="reviews">hide reviews</label>
+            <input type="checkbox" id="hide-reviews-checkbox" name="hide-reviews-checkbox" value="yes">
+            <label for="hide-reviews-checkbox">hide reviews</label>
         </div>
     </div>
     <div class="setting-section">
-        <input type="checkbox" id="show-logged" name="show-logged" value="no">
-        <label for="show-logged">show for logged films</label>
+        <input type="checkbox" id="show-logged-checkbox" name="show-logged-checkbox" value="no">
+        <label for="show-logged-checkbox">show for logged films</label>
     </div>
 </div>
+<script src="../shared/constants.js"></script>
+<script src="../shared/settings.js"></script>
 <script src="popup.js"></script>
 </body>
 
