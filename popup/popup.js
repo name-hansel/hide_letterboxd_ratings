@@ -18,18 +18,18 @@ function setupPopup() {
     const showLoggedCheckbox = getShowLoggedCheckbox();
 
     ratingCheckbox.addEventListener(CHANGE, (event) => {
-        getActiveTab().then((tabs) => {
+        getActiveTab().then((tab) => {
             const checked = event.target.checked;
-            sendVisibilityUpdate(tabs[0].id, SETTINGS.RATING.key, checked, showLoggedCheckbox.checked);
+            sendVisibilityUpdate(tab.id, SETTINGS.RATING.key, checked, showLoggedCheckbox.checked);
             void Settings.setRating(checked);
             updateShowLoggedCheckbox();
         }).catch(reportScriptError);
     });
 
     reviewCheckbox.addEventListener(CHANGE, (event) => {
-        getActiveTab().then((tabs) => {
+        getActiveTab().then((tab) => {
             const checked = event.target.checked;
-            sendVisibilityUpdate(tabs[0].id, SETTINGS.REVIEW.key, checked, showLoggedCheckbox.checked);
+            sendVisibilityUpdate(tab.id, SETTINGS.REVIEW.key, checked, showLoggedCheckbox.checked);
             void Settings.setReview(checked);
             updateShowLoggedCheckbox();
         }).catch(reportScriptError);
@@ -40,9 +40,9 @@ function setupPopup() {
         const hideRatings = ratingCheckbox.checked;
         const hideReviews = reviewCheckbox.checked;
 
-        getActiveTab().then((tabs) => {
-            sendVisibilityUpdate(tabs[0].id, SETTINGS.RATING.key, hideRatings, showOnlyLoggedChecked);
-            sendVisibilityUpdate(tabs[0].id, SETTINGS.REVIEW.key, hideReviews, showOnlyLoggedChecked);
+        getActiveTab().then((tab) => {
+            sendVisibilityUpdate(tab.id, SETTINGS.RATING.key, hideRatings, showOnlyLoggedChecked);
+            sendVisibilityUpdate(tab.id, SETTINGS.REVIEW.key, hideReviews, showOnlyLoggedChecked);
         }).catch(reportScriptError);
 
         void Settings.setShowLogged(showOnlyLoggedChecked);
@@ -62,9 +62,9 @@ function updatePopupFromStorage() {
 }
 
 function updatePopupEditability() {
-    getActiveTab().then((tabs) => {
+    getActiveTab().then((tab) => {
         for (const element of document.getElementsByTagName("input")) {
-            element.disabled = !isFilmPage(tabs[0].url);
+            element.disabled = !isFilmPage(tab.url);
         }
     });
 }
