@@ -63,14 +63,9 @@ function updatePopupFromStorage() {
 }
 
 function updateVisibility(tabs, type, hide, showOnlyLogged) {
-    browser.tabs
-        .query({active: true, currentWindow: true})
-        .then(() => {
-            browser.tabs.sendMessage(tabs[0].id, {
-                REQUEST_TYPE: type, REQUEST_HIDE: hide, REQUEST_SHOW_ONLY_LOGGED: showOnlyLogged
-            });
-        })
-        .catch(reportScriptError);
+    browser.tabs.sendMessage(tabs[0].id, {
+        REQUEST_TYPE: type, REQUEST_HIDE: hide, REQUEST_SHOW_ONLY_LOGGED: showOnlyLogged
+    });
 }
 
 function updatePopupEditability() {
