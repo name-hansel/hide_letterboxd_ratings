@@ -20,7 +20,7 @@ function setupPopup() {
     ratingCheckbox.addEventListener(CHANGE, (event) => {
         browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
             const checked = event.target.checked;
-            sendVisibilityUpdate(tabs, SETTINGS.RATING.key, checked, showLoggedCheckbox.checked);
+            sendVisibilityUpdate(tabs[0].id, SETTINGS.RATING.key, checked, showLoggedCheckbox.checked);
             void Settings.setRating(checked);
             updateShowLoggedCheckbox();
         }).catch(reportScriptError);
@@ -29,7 +29,7 @@ function setupPopup() {
     reviewCheckbox.addEventListener(CHANGE, (event) => {
         browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
             const checked = event.target.checked;
-            sendVisibilityUpdate(tabs, SETTINGS.REVIEW.key, checked, showLoggedCheckbox.checked);
+            sendVisibilityUpdate(tabs[0].id, SETTINGS.REVIEW.key, checked, showLoggedCheckbox.checked);
             void Settings.setReview(checked);
             updateShowLoggedCheckbox();
         }).catch(reportScriptError);
@@ -41,8 +41,8 @@ function setupPopup() {
         const hideReviews = reviewCheckbox.checked;
 
         browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
-            sendVisibilityUpdate(tabs, SETTINGS.RATING.key, hideRatings, showOnlyLoggedChecked);
-            sendVisibilityUpdate(tabs, SETTINGS.REVIEW.key, hideReviews, showOnlyLoggedChecked);
+            sendVisibilityUpdate(tabs[0].id, SETTINGS.RATING.key, hideRatings, showOnlyLoggedChecked);
+            sendVisibilityUpdate(tabs[0].id, SETTINGS.REVIEW.key, hideReviews, showOnlyLoggedChecked);
         }).catch(reportScriptError);
 
         void Settings.setShowLogged(showOnlyLoggedChecked);
@@ -58,12 +58,6 @@ function updatePopupFromStorage() {
         getHideRatingCheckbox().checked = settings[SETTINGS.RATING.key];
         getHideReviewCheckbox().checked = settings[SETTINGS.REVIEW.key];
         getShowLoggedCheckbox().checked = settings[SETTINGS.SHOW_LOGGED.key];
-    });
-}
-
-function sendVisibilityUpdate(tabs, key, hide, showOnlyLogged) {
-    browser.tabs.sendMessage(tabs[0].id, {
-        [MESSAGE.KEY]: key, [MESSAGE.HIDE]: hide, [MESSAGE.SHOW_LOGGED]: showOnlyLogged
     });
 }
 

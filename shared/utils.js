@@ -21,3 +21,11 @@ const MESSAGE = Object.freeze({
     HIDE: "hide",
     SHOW_LOGGED: "showOnlyLogged"
 });
+
+const sendVisibilityUpdate = (tabId, key, hide, showLogged) => {
+    return browser.tabs.sendMessage(tabId, {
+        [MESSAGE.KEY]: key,
+        [MESSAGE.HIDE]: hide,
+        [MESSAGE.SHOW_LOGGED]: showLogged
+    });
+}
