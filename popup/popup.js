@@ -18,7 +18,7 @@ function setupPopup() {
     const showLoggedCheckbox = getShowLoggedCheckbox();
 
     ratingCheckbox.addEventListener(CHANGE, (event) => {
-        browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
+        getActiveTab().then((tabs) => {
             const checked = event.target.checked;
             sendVisibilityUpdate(tabs[0].id, SETTINGS.RATING.key, checked, showLoggedCheckbox.checked);
             void Settings.setRating(checked);
@@ -27,7 +27,7 @@ function setupPopup() {
     });
 
     reviewCheckbox.addEventListener(CHANGE, (event) => {
-        browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
+        getActiveTab().then((tabs) => {
             const checked = event.target.checked;
             sendVisibilityUpdate(tabs[0].id, SETTINGS.REVIEW.key, checked, showLoggedCheckbox.checked);
             void Settings.setReview(checked);
@@ -40,7 +40,7 @@ function setupPopup() {
         const hideRatings = ratingCheckbox.checked;
         const hideReviews = reviewCheckbox.checked;
 
-        browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
+        getActiveTab().then((tabs) => {
             sendVisibilityUpdate(tabs[0].id, SETTINGS.RATING.key, hideRatings, showOnlyLoggedChecked);
             sendVisibilityUpdate(tabs[0].id, SETTINGS.REVIEW.key, hideReviews, showOnlyLoggedChecked);
         }).catch(reportScriptError);
@@ -62,7 +62,7 @@ function updatePopupFromStorage() {
 }
 
 function updatePopupEditability() {
-    browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
+    getActiveTab().then((tabs) => {
         for (const element of document.getElementsByTagName("input")) {
             element.disabled = !isFilmPage(tabs[0].url);
         }

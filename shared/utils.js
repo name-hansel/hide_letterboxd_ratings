@@ -46,3 +46,10 @@ const shouldHide = (hide, showLogged) => {
 
     return true;
 }
+
+const getActiveTab = async () => {
+    return (await browser.tabs.query({
+        active: true,
+        currentWindow: true
+    }))[0];
+}
