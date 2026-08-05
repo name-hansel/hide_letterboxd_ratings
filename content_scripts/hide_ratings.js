@@ -7,13 +7,14 @@ function updateElementVisibility(elementClassName, hide) {
 function updatePageVisibility(request, sender, sendResponse) {
     const hide = shouldHide(request[MESSAGE.HIDE], request[MESSAGE.SHOW_LOGGED] === true);
 
-    if (request[MESSAGE.KEY] === SETTINGS.RATING.key) {
-        updateElementVisibility(SETTINGS.RATING.className, hide);
+    const setting = Object.values(SETTINGS)
+        .find(s => s.key === request[MESSAGE.KEY]);
+
+    if (!setting?.className) {
+        return;
     }
 
-    if (request[MESSAGE.KEY] === SETTINGS.REVIEW.key) {
-        updateElementVisibility(SETTINGS.REVIEW.className, hide);
-    }
+    updateElementVisibility(setting.className, hide);
 }
 
 browser.runtime.onMessage.addListener(updatePageVisibility);
