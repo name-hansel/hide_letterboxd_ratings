@@ -3,21 +3,19 @@ function visibilityUpdate() {
         if (isFilmPage(tabs[0].url)) {
             Settings.getAll().then((settings) => {
                 const showLogged = settings[SETTINGS.SHOW_LOGGED.key];
-
-                browser.tabs.sendMessage(tabs[0].id, {
-                    REQUEST_TYPE: SETTINGS.RATING.key,
-                    REQUEST_HIDE: settings[SETTINGS.RATING.key],
-                    REQUEST_SHOW_ONLY_LOGGED: showLogged
-                });
-
-                browser.tabs.sendMessage(tabs[0].id, {
-                    REQUEST_TYPE: SETTINGS.REVIEW.key,
-                    REQUEST_HIDE: settings[SETTINGS.REVIEW.key],
-                    REQUEST_SHOW_ONLY_LOGGED: showLogged
-                });
+                sendVisibilityUpdate(tabs[0].id, settings, SETTINGS.RATING.key, showLogged);
+                sendVisibilityUpdate(tabs[0].id, settings, SETTINGS.REVIEW.key, showLogged);
             });
         }
 
+    });
+}
+
+const sendVisibilityUpdate = (tabId, settings, key, showLogged) => {
+    return browser.tabs.sendMessage(tabId, {
+        REQUEST_TYPE: key,
+        REQUEST_HIDE: settings[key],
+        REQUEST_SHOW_ONLY_LOGGED: showLogged
     });
 }
 
