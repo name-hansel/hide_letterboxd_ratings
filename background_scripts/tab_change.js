@@ -13,9 +13,9 @@ function visibilityUpdate() {
 
 const sendVisibilityUpdate = (tabId, settings, key, showLogged) => {
     return browser.tabs.sendMessage(tabId, {
-        REQUEST_TYPE: key,
-        REQUEST_HIDE: settings[key],
-        REQUEST_SHOW_ONLY_LOGGED: showLogged
+        [MESSAGE.KEY]: key,
+        [MESSAGE.HIDE]: settings[key],
+        [MESSAGE.SHOW_LOGGED]: showLogged
     });
 }
 

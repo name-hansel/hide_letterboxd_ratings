@@ -15,3 +15,9 @@ const SETTINGS = Object.freeze({
         key: "SHOW_LOGGED"
     }
 });
+
+const MESSAGE = Object.freeze({
+    KEY: "key",
+    HIDE: "hide",
+    SHOW_LOGGED: "showOnlyLogged"
+});

@@ -61,9 +61,9 @@ function updatePopupFromStorage() {
     });
 }
 
-function sendVisibilityUpdate(tabs, type, hide, showOnlyLogged) {
+function sendVisibilityUpdate(tabs, key, hide, showOnlyLogged) {
     browser.tabs.sendMessage(tabs[0].id, {
-        REQUEST_TYPE: type, REQUEST_HIDE: hide, REQUEST_SHOW_ONLY_LOGGED: showOnlyLogged
+        [MESSAGE.KEY]: key, [MESSAGE.HIDE]: hide, [MESSAGE.SHOW_LOGGED]: showOnlyLogged
     });
 }
 
