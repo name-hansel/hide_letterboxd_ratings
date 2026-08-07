@@ -35,7 +35,7 @@ async function setupPopup() {
         await updateLetterboxdTabs();
     });
 
-    updatePopupFromStorage();
+    await updatePopupFromStorage();
     await updateShowLoggedCheckbox();
 }
 
@@ -44,31 +44,26 @@ function reportScriptError(error) {
 }
 
 // Default popup checkboxes from storage
-function updatePopupFromStorage() {
-    Settings.getAll().then((settings) => {
-        getHideRatingCheckbox().checked = settings[SETTINGS.RATING.key];
-        getHideReviewCheckbox().checked = settings[SETTINGS.REVIEW.key];
-        getShowLoggedCheckbox().checked = settings[SETTINGS.SHOW_LOGGED.key];
-    });
+async function updatePopupFromStorage() {
+    const settings = await Settings.getAll();
+
+    getHideRatingCheckbox().checked = settings[SETTINGS.RATING.key];
+    getHideReviewCheckbox().checked = settings[SETTINGS.REVIEW.key];
+    getShowLoggedCheckbox().checked = settings[SETTINGS.SHOW_LOGGED.key];
 }
 
 // Update show logged checkbox
 async function updateShowLoggedCheckbox() {
-    const hideSomething = await calculateShowLoggedCheckboxEditability();
+    const settings = await Settings.getAll();
+    const hideSomething =
+        settings[SETTINGS.RATING.key] ||
+        settings[SETTINGS.REVIEW.key];
 
     getShowLoggedCheckbox().disabled = !hideSomething;
     if (!hideSomething) {
         await Settings.setShowLogged(false);
+        getShowLoggedCheckbox().checked = false;
     }
-}
-
-async function calculateShowLoggedCheckboxEditability() {
-    const [hideRating, hideReview] = await Promise.all([
-        Settings.getRating(),
-        Settings.getReview(),
-    ]);
-
-    return hideRating || hideReview;
 }
 
 async function updateLetterboxdTabs() {
@@ -79,6 +74,7 @@ async function updateLetterboxdTabs() {
     for (const tab of tabs) {
         browser.tabs.sendMessage(tab.id, {
             type: SETTINGS_CHANGED
+        }).catch(() => {
         });
     }
 }
