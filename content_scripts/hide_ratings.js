@@ -4,17 +4,16 @@ function updateElementVisibility(elementClassName, hide) {
     });
 }
 
-function updatePageVisibility(request, sender, sendResponse) {
-    const hide = shouldHide(request[MESSAGE.HIDE], request[MESSAGE.SHOW_LOGGED] === true);
+async function updatePageVisibility() {
+    const settings = await Settings.getAll();
+    const showLogged = settings[SETTINGS.SHOW_LOGGED.key];
 
-    const setting = Object.values(SETTINGS)
-        .find(s => s.key === request[MESSAGE.KEY]);
-
-    if (!setting?.className) {
-        return;
-    }
-
-    updateElementVisibility(setting.className, hide);
+    updateElementVisibility(SETTINGS.RATING.className, shouldHide(settings[SETTINGS.RATING.key], showLogged));
+    updateElementVisibility(SETTINGS.REVIEW.className, shouldHide(settings[SETTINGS.REVIEW.key], showLogged));
 }
 
-browser.runtime.onMessage.addListener(updatePageVisibility);
+browser.runtime.onMessage.addListener(async (message) => {
+    if (message.type === SETTINGS_CHANGED) {
+        await updatePageVisibility();
+    }
+});

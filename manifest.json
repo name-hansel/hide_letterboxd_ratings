@@ -30,13 +30,6 @@
       ]
     }
   ],
-  "background": {
-    "scripts": [
-      "shared/utils.js",
-      "shared/settings.js",
-      "background_scripts/tab_change.js"
-    ]
-  },
   "permissions": [
     "activeTab",
     "storage",

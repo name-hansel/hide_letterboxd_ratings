@@ -29,14 +29,7 @@ function waitForElement(selector, callback) {
     });
 }
 
-function updateVisibility(elementClassName, hide, showLogged) {
-    updateElementVisibility(elementClassName, shouldHide(hide, showLogged));
-}
-
-waitForElement(".actions-row1", () => {
-    Settings.getAll().then((settings) => {
-        const showLogged = settings[SETTINGS.SHOW_LOGGED.key];
-        updateVisibility(SETTINGS.RATING.className, settings[SETTINGS.RATING.key], showLogged);
-        updateVisibility(SETTINGS.REVIEW.className, settings[SETTINGS.REVIEW.key], showLogged);
-    })
+// Update visibility after page loads
+waitForElement(".actions-row1", async () => {
+    await updatePageVisibility();
 });

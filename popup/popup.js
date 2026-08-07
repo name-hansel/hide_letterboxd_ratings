@@ -1,5 +1,6 @@
 const CHANGE = "change";
 
+// GETTERS
 function getHideRatingCheckbox() {
     return document.getElementById("hide-ratings-checkbox");
 }
@@ -12,47 +13,37 @@ function getShowLoggedCheckbox() {
     return document.getElementById("show-logged-checkbox");
 }
 
-function setupPopup() {
+async function setupPopup() {
     const ratingCheckbox = getHideRatingCheckbox();
     const reviewCheckbox = getHideReviewCheckbox();
     const showLoggedCheckbox = getShowLoggedCheckbox();
 
-    ratingCheckbox.addEventListener(CHANGE, (event) => {
-        getActiveTab().then((tab) => {
-            const checked = event.target.checked;
-            sendVisibilityUpdate(tab.id, SETTINGS.RATING.key, checked, showLoggedCheckbox.checked);
-            void Settings.setRating(checked);
-            updateShowLoggedCheckbox();
-        }).catch(reportScriptError);
+    ratingCheckbox.addEventListener(CHANGE, async (event) => {
+        await Settings.setRating(event.target.checked);
+        await updateShowLoggedCheckbox();
+        await updateLetterboxdTabs();
     });
 
-    reviewCheckbox.addEventListener(CHANGE, (event) => {
-        getActiveTab().then((tab) => {
-            const checked = event.target.checked;
-            sendVisibilityUpdate(tab.id, SETTINGS.REVIEW.key, checked, showLoggedCheckbox.checked);
-            void Settings.setReview(checked);
-            updateShowLoggedCheckbox();
-        }).catch(reportScriptError);
+    reviewCheckbox.addEventListener(CHANGE, async (event) => {
+        await Settings.setReview(event.target.checked);
+        await updateShowLoggedCheckbox();
+        await updateLetterboxdTabs();
     });
 
-    showLoggedCheckbox.addEventListener(CHANGE, (event) => {
-        const showOnlyLoggedChecked = event.target.checked;
-        const hideRatings = ratingCheckbox.checked;
-        const hideReviews = reviewCheckbox.checked;
+    showLoggedCheckbox.addEventListener(CHANGE, async (event) => {
+        await Settings.setShowLogged(event.target.checked);
+        await updateLetterboxdTabs();
+    });
 
-        getActiveTab().then((tab) => {
-            sendVisibilityUpdate(tab.id, SETTINGS.RATING.key, hideRatings, showOnlyLoggedChecked);
-            sendVisibilityUpdate(tab.id, SETTINGS.REVIEW.key, hideReviews, showOnlyLoggedChecked);
-        }).catch(reportScriptError);
-
-        void Settings.setShowLogged(showOnlyLoggedChecked);
-    })
+    updatePopupFromStorage();
+    await updateShowLoggedCheckbox();
 }
 
 function reportScriptError(error) {
     console.error(error.message);
 }
 
+// Default popup checkboxes from storage
 function updatePopupFromStorage() {
     Settings.getAll().then((settings) => {
         getHideRatingCheckbox().checked = settings[SETTINGS.RATING.key];
@@ -61,22 +52,34 @@ function updatePopupFromStorage() {
     });
 }
 
-function updatePopupEditability() {
-    getActiveTab().then((tab) => {
-        for (const element of document.getElementsByTagName("input")) {
-            element.disabled = !isFilmPage(tab.url);
-        }
-    });
+// Update show logged checkbox
+async function updateShowLoggedCheckbox() {
+    const hideSomething = await calculateShowLoggedCheckboxEditability();
+
+    getShowLoggedCheckbox().disabled = !hideSomething;
+    if (!hideSomething) {
+        await Settings.setShowLogged(false);
+    }
 }
 
-function updateShowLoggedCheckbox() {
-    const showLoggedCheckbox = getShowLoggedCheckbox();
-    const hideSomething = getHideRatingCheckbox().checked || getHideReviewCheckbox().checked;
+async function calculateShowLoggedCheckboxEditability() {
+    const [hideRating, hideReview] = await Promise.all([
+        Settings.getRating(),
+        Settings.getReview(),
+    ]);
 
-    showLoggedCheckbox.disabled = !hideSomething;
-    if (!hideSomething) {
-        showLoggedCheckbox.checked = false;
-        void Settings.setShowLogged(false);
+    return hideRating || hideReview;
+}
+
+async function updateLetterboxdTabs() {
+    const tabs = await browser.tabs.query({
+        url: "*://letterboxd.com/film/*"
+    });
+
+    for (const tab of tabs) {
+        browser.tabs.sendMessage(tab.id, {
+            type: SETTINGS_CHANGED
+        });
     }
 }
 
@@ -84,9 +87,7 @@ browser.tabs
     .executeScript({
         file: "/content_scripts/hide_ratings.js",
     })
-    .then(() => {
-        setupPopup();
-        updatePopupFromStorage();
-        updatePopupEditability();
+    .then(async () => {
+        await setupPopup();
     })
     .catch(reportScriptError);
