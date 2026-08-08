@@ -13,10 +13,15 @@ function getShowLoggedCheckbox() {
     return document.getElementById("show-logged-checkbox");
 }
 
+function getHideReviewsBelowCheckbox() {
+    return document.getElementById("hide-reviews-below-checkbox");
+}
+
 async function setupPopup() {
     const ratingCheckbox = getHideRatingCheckbox();
     const reviewCheckbox = getHideReviewCheckbox();
     const showLoggedCheckbox = getShowLoggedCheckbox();
+    const hideReviewsBelowCheckbox = getHideReviewsBelowCheckbox();
 
     ratingCheckbox.addEventListener(CHANGE, async (event) => {
         await Settings.setRating(event.target.checked);
@@ -32,6 +37,11 @@ async function setupPopup() {
 
     showLoggedCheckbox.addEventListener(CHANGE, async (event) => {
         await Settings.setShowLogged(event.target.checked);
+        await updateLetterboxdTabs();
+    });
+
+    hideReviewsBelowCheckbox.addEventListener(CHANGE, async () => {
+        await Settings.setHideReviewsBelow(event.target.checked);
         await updateLetterboxdTabs();
     });
 

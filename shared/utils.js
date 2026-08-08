@@ -9,6 +9,9 @@ const SETTINGS = Object.freeze({
     },
     SHOW_LOGGED: {
         key: "SHOW_LOGGED"
+    },
+    HIDE_REVIEWS_BELOW: {
+        key: "HIDE_REVIEWS_BELOW"
     }
 });
 
@@ -26,7 +29,7 @@ function isFilmWatched() {
         actionText === "You’ve reviewed this film";
 }
 
-const shouldHide = (hide, showLogged) => {
+const shouldHideRatingOrReviewIfNotLogged = (hide, showLogged) => {
     if (!hide) {
         return false;
     }
