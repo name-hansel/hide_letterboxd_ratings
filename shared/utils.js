@@ -21,15 +21,14 @@ const SETTINGS_CHANGED = "SETTINGS_CHANGED";
 const MINIMUM_REVIEW_CHARACTER_LENGTH = "100";
 
 function isFilmWatched() {
-    const watchLink = document.querySelector("[data-is-watched]");
-
-    if (watchLink) {
-        return watchLink.dataset.isWatched === "true";
+    const actionText = document.querySelector(".js-user-actions-menu-text")?.innerText;
+    if (actionText) {
+        return actionText === "You’ve logged this film" ||
+            actionText === "You’ve reviewed this film";
     }
 
-    const actionText = document.querySelector(".js-user-actions-menu-text")?.innerText;
-    return actionText === "You’ve logged this film" ||
-        actionText === "You’ve reviewed this film";
+    const action = document.querySelector(".actions-row1");
+    return action.innerText.split("\n")[0] !== "Watch";
 }
 
 const shouldHideRatingOrReviewIfNotLogged = (hide, showLogged) => {

@@ -4,28 +4,63 @@ function updateElementVisibility(elementClassName, hide) {
     });
 }
 
-function updateShortReviewVisibility() {
+function updateReviewVisibility(reviewMode, showLogged) {
+    const hideReviews = reviewMode !== null;
+
     document.querySelectorAll(".js-review").forEach((review) => {
+        const reviewItem = review.closest(".listitem");
         const reviewBody = review.querySelector(".js-review-body");
 
-        if (!reviewBody) {
+        if (!reviewItem) {
             return;
         }
 
-        review.closest(".listitem").style.display = shouldHideShortReview(reviewBody.textContent, MINIMUM_REVIEW_CHARACTER_LENGTH) ? "none" : "";
+        // Logged films are always exempt from review hiding
+        if (showLogged && isFilmWatched()) {
+            reviewItem.style.display = "";
+            return;
+        }
+
+        if (!hideReviews) {
+            reviewItem.style.display = "";
+            return;
+        }
+
+        if (reviewMode === REVIEW_MODES.ALL) {
+            reviewItem.style.display = "none";
+            return;
+        }
+
+        if (reviewMode === REVIEW_MODES.SHORT) {
+            if (!reviewBody) {
+                return;
+            }
+
+            const hide = shouldHideShortReview(
+                reviewBody.textContent,
+                MINIMUM_REVIEW_CHARACTER_LENGTH
+            );
+
+            reviewItem.style.display = hide ? "none" : "";
+        }
     });
 }
+
 
 async function updatePageVisibility() {
     const settings = await Settings.getAll();
     const showLogged = settings[SETTINGS.SHOW_LOGGED.key];
 
-    updateElementVisibility(SETTINGS.RATING.className, shouldHideRatingOrReviewIfNotLogged(settings[SETTINGS.RATING.key], showLogged));
-    updateElementVisibility(SETTINGS.REVIEW.className, shouldHideRatingOrReviewIfNotLogged(settings[SETTINGS.REVIEW.key], showLogged));
+    updateElementVisibility(
+        SETTINGS.RATING.className,
+        shouldHideRatingOrReviewIfNotLogged(
+            settings[SETTINGS.RATING.key],
+            showLogged
+        )
+    );
 
-    if (settings[SETTINGS.HIDE_REVIEWS_BELOW.key]) {
-        updateShortReviewVisibility();
-    }
+    const reviewMode = settings[SETTINGS.REVIEW_MODE.key];
+    updateReviewVisibility(reviewMode, showLogged);
 }
 
 browser.runtime.onMessage.addListener(async (message) => {

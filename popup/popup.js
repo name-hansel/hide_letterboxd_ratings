@@ -43,6 +43,7 @@ async function setupPopup() {
     ).forEach((radio) => {
         radio.addEventListener(CHANGE, async (event) => {
             await Settings.setReviewMode(event.target.value);
+            await updateLetterboxdTabs();
         });
     });
 
