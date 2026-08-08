@@ -46,10 +46,18 @@ function updateReviewVisibility(reviewMode, showLogged) {
     });
 }
 
-
+// TODO review char count filtering doesn't work on page load of /reviews/ page
+// TODO show temporary popup settings (100 char and false show logged) always on review page
+// TODO disable all and show logged elements on review page
 async function updatePageVisibility() {
     const settings = await Settings.getAll();
-    const showLogged = settings[SETTINGS.SHOW_LOGGED.key];
+    const showLogged = isFilmReviewPage(window.location.href)
+        ? false
+        : settings[SETTINGS.SHOW_LOGGED.key];
+
+    const reviewMode = isFilmReviewPage(window.location.href)
+        ? getReviewModeForFilmPage(settings[SETTINGS.REVIEW_MODE.key])
+        : settings[SETTINGS.REVIEW_MODE.key];
 
     updateElementVisibility(
         SETTINGS.RATING.className,
@@ -59,8 +67,15 @@ async function updatePageVisibility() {
         )
     );
 
-    const reviewMode = settings[SETTINGS.REVIEW_MODE.key];
-    updateReviewVisibility(reviewMode, showLogged);
+    updateReviewVisibility(reviewMode);
+}
+
+function getReviewModeForFilmPage(reviewMode) {
+    if (reviewMode === REVIEW_MODES.ALL) {
+        return REVIEW_MODES.SHORT;
+    }
+
+    return reviewMode;
 }
 
 browser.runtime.onMessage.addListener(async (message) => {

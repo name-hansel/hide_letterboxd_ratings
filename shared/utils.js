@@ -46,3 +46,7 @@ const shouldHideRatingOrReviewIfNotLogged = (hide, showLogged) => {
 const shouldHideShortReview = (reviewText, minimumCharacterLength) => {
     return reviewText.trim().length < minimumCharacterLength;
 }
+
+const isFilmReviewPage = (url) => {
+    return /^https?:\/\/letterboxd\.com\/film\/[^/]+\/(?:review|reviews(?:\/.*)?)\/?$/.test(url);
+};
