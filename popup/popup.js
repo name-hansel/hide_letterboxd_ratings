@@ -40,7 +40,7 @@ async function setupPopup() {
         await updateLetterboxdTabs();
     });
 
-    hideReviewsBelowCheckbox.addEventListener(CHANGE, async () => {
+    hideReviewsBelowCheckbox.addEventListener(CHANGE, async (event) => {
         await Settings.setHideReviewsBelow(event.target.checked);
         await updateLetterboxdTabs();
     });
@@ -60,6 +60,7 @@ async function updatePopupFromStorage() {
     getHideRatingCheckbox().checked = settings[SETTINGS.RATING.key];
     getHideReviewCheckbox().checked = settings[SETTINGS.REVIEW.key];
     getShowLoggedCheckbox().checked = settings[SETTINGS.SHOW_LOGGED.key];
+    getHideReviewsBelowCheckbox().checked = settings[SETTINGS.HIDE_REVIEWS_BELOW.key];
 }
 
 // Update show logged checkbox

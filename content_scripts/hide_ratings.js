@@ -4,12 +4,28 @@ function updateElementVisibility(elementClassName, hide) {
     });
 }
 
+function updateShortReviewVisibility() {
+    document.querySelectorAll(".js-review").forEach((review) => {
+        const reviewBody = review.querySelector(".js-review-body");
+
+        if (!reviewBody) {
+            return;
+        }
+
+        review.closest(".listitem").style.display = shouldHideShortReview(reviewBody.textContent, MINIMUM_REVIEW_CHARACTER_LENGTH) ? "none" : "";
+    });
+}
+
 async function updatePageVisibility() {
     const settings = await Settings.getAll();
     const showLogged = settings[SETTINGS.SHOW_LOGGED.key];
 
     updateElementVisibility(SETTINGS.RATING.className, shouldHideRatingOrReviewIfNotLogged(settings[SETTINGS.RATING.key], showLogged));
     updateElementVisibility(SETTINGS.REVIEW.className, shouldHideRatingOrReviewIfNotLogged(settings[SETTINGS.REVIEW.key], showLogged));
+
+    if (settings[SETTINGS.HIDE_REVIEWS_BELOW.key]) {
+        updateShortReviewVisibility();
+    }
 }
 
 browser.runtime.onMessage.addListener(async (message) => {

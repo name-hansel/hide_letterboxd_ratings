@@ -16,6 +16,7 @@ const SETTINGS = Object.freeze({
 });
 
 const SETTINGS_CHANGED = "SETTINGS_CHANGED";
+const MINIMUM_REVIEW_CHARACTER_LENGTH = "100";
 
 function isFilmWatched() {
     const watchLink = document.querySelector("[data-is-watched]");
@@ -39,4 +40,8 @@ const shouldHideRatingOrReviewIfNotLogged = (hide, showLogged) => {
     }
 
     return true;
+}
+
+const shouldHideShortReview = (reviewText, minimumCharacterLength) => {
+    return reviewText.trim().length < minimumCharacterLength;
 }

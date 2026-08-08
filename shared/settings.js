@@ -2,7 +2,7 @@ const DEFAULT_SETTINGS = {
     [SETTINGS.RATING.key]: false,
     [SETTINGS.REVIEW.key]: false,
     [SETTINGS.SHOW_LOGGED.key]: false,
-    [SETTINGS.HIDE_REVIEWS_BELOW]: false
+    [SETTINGS.HIDE_REVIEWS_BELOW.key]: false
 };
 
 const Settings = {
