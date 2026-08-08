@@ -15,8 +15,15 @@ const SETTINGS = Object.freeze({
 const SETTINGS_CHANGED = "SETTINGS_CHANGED";
 
 function isFilmWatched() {
-    const action = document.querySelector(".actions-row1");
-    return action.innerText.split("\n")[0] !== "Watch";
+    const watchLink = document.querySelector("[data-is-watched]");
+
+    if (watchLink) {
+        return watchLink.dataset.isWatched === "true";
+    }
+
+    const actionText = document.querySelector(".js-user-actions-menu-text")?.innerText;
+    return actionText === "You’ve logged this film" ||
+        actionText === "You’ve reviewed this film";
 }
 
 const shouldHide = (hide, showLogged) => {
