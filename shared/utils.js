@@ -3,16 +3,18 @@ const SETTINGS = Object.freeze({
         key: "RATING",
         className: "ratings-histogram-chart"
     },
-    REVIEW: {
-        key: "REVIEW",
+    REVIEW_MODE: {
+        key: "REVIEW_MODE",
         className: "film-recent-reviews"
     },
     SHOW_LOGGED: {
         key: "SHOW_LOGGED"
-    },
-    HIDE_REVIEWS_BELOW: {
-        key: "HIDE_REVIEWS_BELOW"
     }
+});
+
+const REVIEW_MODES = Object.freeze({
+    ALL: "all",
+    SHORT: "short"
 });
 
 const SETTINGS_CHANGED = "SETTINGS_CHANGED";

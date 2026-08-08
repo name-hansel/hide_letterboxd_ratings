@@ -42,6 +42,11 @@ input {
     gap: 20px;
 }
 
+.review-options {
+    display: flex;
+    gap: 20px;
+}
+
 @media (max-width: 600px) {
     html,
     body {

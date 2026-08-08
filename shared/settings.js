@@ -1,8 +1,7 @@
 const DEFAULT_SETTINGS = {
     [SETTINGS.RATING.key]: false,
-    [SETTINGS.REVIEW.key]: false,
+    [SETTINGS.REVIEW_MODE.key]: null,
     [SETTINGS.SHOW_LOGGED.key]: false,
-    [SETTINGS.HIDE_REVIEWS_BELOW.key]: false
 };
 
 const Settings = {
@@ -22,15 +21,11 @@ const Settings = {
         await this.save({[SETTINGS.RATING.key]: value});
     },
 
-    async setReview(value) {
-        await this.save({[SETTINGS.REVIEW.key]: value});
+    async setReviewMode(value) {
+        await this.save({[SETTINGS.REVIEW_MODE.key]: value});
     },
 
     async setShowLogged(value) {
         await this.save({[SETTINGS.SHOW_LOGGED.key]: value});
     },
-
-    async setHideReviewsBelow(value) {
-        await this.save({[SETTINGS.HIDE_REVIEWS_BELOW.key]: value});
-    }
 }

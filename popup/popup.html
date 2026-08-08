@@ -23,9 +23,18 @@
                 <input type="checkbox" id="hide-reviews-checkbox" name="hide-reviews-checkbox" value="yes">
                 <label for="hide-reviews-checkbox">hide reviews</label>
             </div>
-            <div class="setting-section">
-                <input type="checkbox" id="hide-reviews-below-checkbox" name="hide-reviews-below-checkbox" value="no">
-                <label for="hide-reviews-below-checkbox">hide reviews below 100 characters</label>
+            <div class="review-options">
+                <div class="setting-section">
+                    <input type="radio" id="hide-all-reviews-radio"
+                           name="hide-reviews-option" value="all">
+                    <label for="hide-all-reviews-radio">all</label>
+                </div>
+
+                <div class="setting-section">
+                    <input type="radio" id="hide-short-reviews-radio"
+                           name="hide-reviews-option" value="short">
+                    <label for="hide-short-reviews-radio">below 100 characters</label>
+                </div>
             </div>
         </div>
     </div>
