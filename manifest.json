@@ -8,6 +8,8 @@
           "none"
         ]
       }
+    },
+    "gecko_android": {
     }
   },
   "name": "hide letterboxd ratings and reviews",
