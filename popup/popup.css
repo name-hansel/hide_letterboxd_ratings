@@ -41,3 +41,28 @@ input {
     flex-direction: row;
     gap: 20px;
 }
+
+@media (max-width: 600px) {
+    html,
+    body {
+        width: 100%;
+    }
+
+    body {
+        padding: 24px;
+        box-sizing: border-box;
+    }
+
+    h1 {
+        font-size: 22px;
+    }
+
+    .setting-section {
+        gap: 12px;
+        font-size: 20px;
+    }
+
+    .settings-container {
+        gap: 24px;
+    }
+}
