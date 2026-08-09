@@ -13,11 +13,25 @@ function getShowLoggedCheckbox() {
     return document.getElementById("show-logged-checkbox");
 }
 
+function getReviewsPageInfo() {
+    return document.getElementById("reviews-page-info");
+}
+
+async function isCurrentPageFilmReviewsPage() {
+    const [tab] = await browser.tabs.query({
+        active: true,
+        currentWindow: true
+    });
+
+    return tab?.url ? isFilmReviewPage(tab.url) : false;
+}
+
 async function setupPopup() {
     const ratingCheckbox = getHideRatingCheckbox();
     const reviewCheckbox = getHideReviewCheckbox();
     const showLoggedCheckbox = getShowLoggedCheckbox();
 
+    ratingCheckbox.disabled = await isCurrentPageFilmReviewsPage();
     ratingCheckbox.addEventListener(CHANGE, async (event) => {
         await Settings.setRating(event.target.checked);
         await updateShowLoggedCheckbox();
@@ -25,10 +39,13 @@ async function setupPopup() {
     });
 
     reviewCheckbox.addEventListener(CHANGE, async (event) => {
-        const reviewMode = event.target.checked ? REVIEW_MODES.ALL : null
+        // On the reviews page, only short review mode is allowed
+        const reviewMode = event.target.checked ? (
+            await isCurrentPageFilmReviewsPage() ? REVIEW_MODES.SHORT : REVIEW_MODES.ALL
+        ) : null;
         await Settings.setReviewMode(reviewMode);
 
-        updateReviewMode(reviewMode);
+        await updateReviewMode(reviewMode);
         await updateShowLoggedCheckbox();
         await updateLetterboxdTabs();
     });
@@ -42,6 +59,12 @@ async function setupPopup() {
         'input[name="hide-reviews-option"]'
     ).forEach((radio) => {
         radio.addEventListener(CHANGE, async (event) => {
+            const isReviewsPage = await isCurrentPageFilmReviewsPage();
+
+            if (isReviewsPage) {
+                return;
+            }
+
             await Settings.setReviewMode(event.target.value);
             await updateLetterboxdTabs();
         });
@@ -58,33 +81,52 @@ function reportScriptError(error) {
 // Default popup checkboxes from storage
 async function updatePopupFromStorage() {
     const settings = await Settings.getAll();
+    const isCurrentPageReviewsPage = await isCurrentPageFilmReviewsPage();
 
-    getHideRatingCheckbox().checked = settings[SETTINGS.RATING.key];
+    getHideRatingCheckbox().checked = settings[SETTINGS.RATING.key] && !isCurrentPageReviewsPage;
     getHideReviewCheckbox().checked = settings[SETTINGS.REVIEW_MODE.key] != null;
-    getShowLoggedCheckbox().checked = settings[SETTINGS.SHOW_LOGGED.key];
-    updateReviewMode(settings[SETTINGS.REVIEW_MODE.key]);
+
+    // Show logged checkbox must be disabled and cleared when current page is reviews page
+    getShowLoggedCheckbox().checked = settings[SETTINGS.SHOW_LOGGED.key] && !isCurrentPageReviewsPage;
+    await updateReviewMode(settings[SETTINGS.REVIEW_MODE.key]);
+
+    getReviewsPageInfo().hidden = !isCurrentPageReviewsPage;
 }
 
 // Update review mode in popup from storage
-function updateReviewMode(reviewMode) {
+async function updateReviewMode(reviewMode) {
     const radios = document.querySelectorAll(
         'input[name="hide-reviews-option"]'
     );
 
+    const isReviewsPage = await isCurrentPageFilmReviewsPage();
+
+    if (isReviewsPage && reviewMode !== null) {
+        reviewMode = REVIEW_MODES.SHORT;
+    }
+
     radios.forEach((radio) => {
         radio.checked = radio.value === reviewMode;
-        radio.disabled = reviewMode === null;
+
+        if (isReviewsPage && reviewMode !== null) {
+            radio.disabled = radio.value === REVIEW_MODES.ALL;
+        } else {
+            radio.disabled = reviewMode === null;
+        }
     });
 }
 
 // Update show logged checkbox
 async function updateShowLoggedCheckbox() {
     const settings = await Settings.getAll();
+    const isReviewsPage = await isCurrentPageFilmReviewsPage();
+
     const hideSomething =
         settings[SETTINGS.RATING.key] ||
         settings[SETTINGS.REVIEW_MODE.key] != null;
 
-    getShowLoggedCheckbox().disabled = !hideSomething;
+    getShowLoggedCheckbox().disabled = !hideSomething || isReviewsPage;
+
     if (!hideSomething) {
         await Settings.setShowLogged(false);
         getShowLoggedCheckbox().checked = false;

@@ -50,3 +50,11 @@ const shouldHideShortReview = (reviewText, minimumCharacterLength) => {
 const isFilmReviewPage = (url) => {
     return /^https?:\/\/letterboxd\.com\/film\/[^/]+\/(?:review|reviews(?:\/.*)?)\/?$/.test(url);
 };
+
+function getReviewModeForFilmPage(reviewMode) {
+    if (reviewMode === REVIEW_MODES.ALL) {
+        return REVIEW_MODES.SHORT;
+    }
+
+    return reviewMode;
+}

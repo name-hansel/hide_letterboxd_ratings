@@ -47,6 +47,12 @@ input {
     gap: 20px;
 }
 
+#reviews-page-info {
+    font-size: 11px;
+    line-height: 1.4;
+    opacity: 0.7;
+}
+
 @media (max-width: 600px) {
     html,
     body {
