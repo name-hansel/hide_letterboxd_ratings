@@ -46,7 +46,6 @@ function updateReviewVisibility(reviewMode, showLogged) {
     });
 }
 
-// TODO review char count filtering doesn't work on page load of /reviews/ page
 async function updatePageVisibility() {
     const settings = await Settings.getAll();
     const showLogged = isFilmReviewPage(window.location.href)

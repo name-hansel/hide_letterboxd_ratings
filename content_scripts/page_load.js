@@ -30,6 +30,10 @@ function waitForElement(selector, callback) {
 }
 
 // Update visibility after page loads
-waitForElement(".actions-row1", async () => {
-    await updatePageVisibility();
-});
+if (isFilmReviewPage(window.location)) {
+    void updatePageVisibility();
+} else {
+    waitForElement(".actions-row1", async () => {
+        await updatePageVisibility();
+    });
+}
